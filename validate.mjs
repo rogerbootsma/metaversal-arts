@@ -10,7 +10,7 @@ for(const file of files){
  if(!html.includes('Content-Security-Policy'))throw new Error('Missing CSP: '+file);
  if(/<script(?![^>]*\bsrc=)[^>]*>/i.test(html))throw new Error('Unexpected inline script: '+file);
  for(const match of html.matchAll(/(?:href|src)="([^"#]+)(?:#[^"]*)?"/g)){
-   const url=match[1];if(/^(https:|data:)/.test(url))continue;
+   const url=match[1];if(/^(https:|data:|mailto:|tel:)/.test(url))continue;
    const target=resolve(dirname(resolve(root,file)),url);
    await stat(target);checked++;
  }
