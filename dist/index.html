@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="description" content="Metaversal Arts — independent 3D art, procedural tools and immersive worlds by Roger Bootsma. Based in Vienna. Built for the imagination.">
+  <meta name="theme-color" content="#090b0c">
+  <title>Metaversal Arts — Beyond the ordinary</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./style.css">
+  <script src="./ui.js" defer></script>
+  <script src="./scene.js" type="module"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header>
+    <a class="brand" href="#" aria-label="Metaversal Arts home"><span class="brandmark" aria-hidden="true">m<span>✳</span></span><span>METAVERSAL<span class="brand-bottom">ARTS</span></span></a>
+    <nav aria-label="Main navigation"><a href="#explorations">Explorations</a><a href="#studio">The studio</a><a class="nav-contact" href="https://www.fab.com/sellers/Metaversalarts" target="_blank" rel="noopener noreferrer">Visit the store <span aria-hidden="true">↗</span></a></nav>
+  </header>
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-top"><span>INDEPENDENT DIGITAL ART & CREATIVE TOOLS</span><span>VIENNA, AUSTRIA</span></div>
+      <div class="hero-heading"><p class="eyebrow">ART. CODE. OTHER WORLDS.</p><h1 id="hero-title">Beyond the<br><em>ordinary.</em></h1></div>
+      <div class="artwork" id="artwork" role="img" aria-label="An amber sphere of mist surrounding luminous interwoven curves, slowly rotating in three dimensions."><canvas id="scene" aria-hidden="true"></canvas><p id="scene-fallback" hidden>The sculpture is unavailable on this device. Explore the studio below.</p></div>
+      <div class="art-caption"><span class="cross" aria-hidden="true">+</span><span>STUDY 001 — INNER ORBIT<br><span class="muted">A living exploration of form & light</span></span></div>
+      <div class="hero-bottom"><p>Imagined worlds. Unexpected forms.<br>Tools that make more possible.</p><a class="explore" href="#explorations">Enter the explorations <span aria-hidden="true">↓</span></a><button id="motion" class="motion" aria-pressed="false" hidden><span id="motion-icon" aria-hidden="true">Ⅱ</span><span id="motion-label">Pause motion</span></button></div>
+    </section>
+    <section class="explorations section" id="explorations" aria-labelledby="explorations-title">
+      <div class="section-intro"><p class="eyebrow">01 / EXPLORATIONS</p><h2 id="explorations-title">One imagination.<br>Many dimensions.</h2><p>From the tools behind an image to the world inside it. A practice connecting procedural art, immersive storytelling and creative software.</p></div>
+      <div class="fields">
+        <article><span class="field-number">01</span><div><p class="eyebrow">TOOLS & PROCEDURAL ART</p><h3>Make the extraordinary.</h3><p>Blender tools, volumetric experiments and reusable assets. Built from the same curiosity that drives the artwork.</p><span class="field-label">BLENDERMONK / HYPER LOOP TOOLS</span></div><span class="field-symbol" aria-hidden="true">⌘</span></article>
+        <article><span class="field-number">02</span><div><p class="eyebrow">WORLDS & EXPERIENCES</p><h3>Step into the impossible.</h3><p>Cinematic environments, dimensional journeys and 360° experiences that turn a different perspective into a place.</p><span class="field-label">METAMULTIVERSE / IMMERSIVE 3D</span></div><span class="field-symbol" aria-hidden="true">◎</span></article>
+        <article><span class="field-number">03</span><div><p class="eyebrow">DESIGN & MOVING IMAGES</p><h3>Give an idea a world.</h3><p>Original vehicle concepts, future spaces and playful animation. Exploring what could exist, and how it might feel.</p><span class="field-label">BOOTSMATA / DAILY FORTUNE COOKIE</span></div><span class="field-symbol" aria-hidden="true">↗</span></article>
+      </div>
+    </section>
+    <section class="studio section" id="studio" aria-labelledby="studio-title"><p class="eyebrow">02 / THE STUDIO</p><div><h2 id="studio-title">A different perspective<br>is a beginning.</h2><p>Metaversal Arts is the independent creative practice of Roger Bootsma in Vienna. Bringing together 3D animation, procedural systems and immersive worlds, it explores the space where artistic intuition meets technical possibility.</p><a class="text-link" href="https://www.fab.com/sellers/Metaversalarts" target="_blank" rel="noopener noreferrer">Explore the asset store <span aria-hidden="true">↗</span></a></div></section>
+  </main>
+  <footer><a class="footer-name" href="#">Metaversal Arts<span aria-hidden="true">✳</span></a><div class="footer-bottom"><span>© 2026 Metaversal Arts · Roger Bootsma</span><span>IMAGINATION, IN EVERY DIMENSION.</span><nav aria-label="Legal"><a href="./legal.html">Legal notice</a><a href="./privacy.html">Privacy</a><a href="./credits.html">Credits</a></nav></div></footer>
+</body>
+</html>
