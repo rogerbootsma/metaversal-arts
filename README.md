@@ -20,15 +20,13 @@ Public positioning comes from the owner's Metaversalarts strategy. Planning targ
 
 ## Publication status
 
-The draft is not yet published. The public address/contact details, registration details where applicable, and complete privacy information are pending. `node validate.mjs --publish` checks for these known draft markers. This guard is not a legal-compliance validator.
-
-Confirm the repository/account and domain before publishing. Suggested new public repository: `rogerbootsma/metaversal-arts`. Copy only this folder to that repository. Never publish the parent project mirror or local business references.
+The approved site is deployed from `rogerbootsma/metaversal-arts` using the manual Pages workflow. `node validate.mjs --publish` rejects known draft markers; it is not a legal-compliance validator.
 
 GitHub Pages is free for public repositories on GitHub Free. The domain renewal remains separate. Select GitHub Actions as the Pages source, then run the included manual Publish GitHub Pages workflow. It publishes only `dist/` and uses scoped Pages/OIDC permissions. No deployment token is stored in source.
 
 ## Domain and HTTPS
 
-Intended domain, awaiting confirmation: `metaversalarts.io`.
+Custom domain: `metaversalarts.io`.
 
 1. Verify domain ownership in the GitHub account's Pages settings using GitHub's unique TXT record. Keep this verification record.
 2. Set the custom domain in the repository's Pages settings before pointing public DNS at it.
@@ -52,3 +50,4 @@ GitHub Pages manages TLS and server headers. Meta CSP cannot enforce `frame-ance
 - [WKO legal notice guidance for sole proprietors](https://www.wko.at/oe/internetrecht/das-korrekte-website-impressum-nicht-fb-eingetr-eu.pdf)
 
 Site content and original artwork: copyright Roger Bootsma / Metaversal Arts. Three.js retains its separate MIT licence.
+
