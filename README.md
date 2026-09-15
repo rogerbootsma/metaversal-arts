@@ -28,6 +28,12 @@ GitHub Pages is free for public repositories on GitHub Free. The domain renewal 
 
 Custom domain: `metaversalarts.io`.
 
+## Project constellation
+
+The Projects navigation opens `dist/projects.html`. Edit the names in `projects.mjs`, then run `node make-pages.mjs` to regenerate the directory and shared navigation. `dist/projects-scene.js` reads the generated names and animates them around a locally rendered Three.js volume. Styling is in `dist/projects.css`. Names are presented as a directory without assuming that every project has a public website.
+
+The mist breathes over a ten-second cycle with subtle noise oscillation. Motion respects reduced-motion preferences, can be paused, and stops offscreen or when the tab is hidden. A static directory remains available without JavaScript or WebGL.
+
 1. Verify domain ownership in the GitHub account's Pages settings using GitHub's unique TXT record. Keep this verification record.
 2. Set the custom domain in the repository's Pages settings before pointing public DNS at it.
 3. In the active DNS provider (Namecheap Advanced DNS if Namecheap hosts the nameservers), use four A records for `@`: `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`. Point `www` via CNAME to `rogerbootsma.github.io`.
