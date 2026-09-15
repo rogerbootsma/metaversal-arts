@@ -1,5 +1,5 @@
 import {readFile,writeFile} from 'node:fs/promises';
-import {projects} from './projects.mjs';
+import {projects,projectTypes} from './projects.mjs';
 const home=await readFile(new URL('./dist/index.html',import.meta.url),'utf8');
 const header=home.match(/<header>[\s\S]*?<\/header>/)[0].replaceAll('href="#"','href="./index.html"').replaceAll('href="#explorations"','href="./index.html#explorations"').replaceAll('href="#studio"','href="./index.html#studio"').replaceAll('href="#contact"','href="./index.html#contact"');
 const footer=home.match(/<footer>[\s\S]*?<\/footer>/)[0].replace('href="#"','href="./index.html"');
@@ -31,9 +31,9 @@ const projectHead=home.slice(home.indexOf('<head>'),home.indexOf('</head>')+7)
  .replace(/<title>.*?<\/title>/,'<title>Projects — Metaversal Arts</title>')
  .replace(/  <script[^\n]+\n/g,'')
  .replace(/<meta name="description"[^>]+>/,'<meta name="description" content="The Metaversal Arts project constellation. Art, tools and other worlds in orbit.">')
- .replace('</head>','<link rel="stylesheet" href="./projects.css?v=orbit-1">\n<script type="module" src="./projects-scene.js?v=orbit-4d-2"></script>\n</head>');
+ .replace('</head>','<link rel="stylesheet" href="./projects.css?v=orbit-planes-3">\n<script type="module" src="./projects-scene.js?v=orbit-planes-3"></script>\n</head>');
 const projectHeader=header.replace('href="./projects.html"','href="./projects.html" aria-current="page"');
-const items=projects.map((name,i)=>`<li><span class="project-number">${String(i+1).padStart(2,'0')}</span><span data-project-name>${name}</span><img src="./star-nine.svg" width="18" height="18" alt=""></li>`).join('\n');
+const items=projects.map(({name,type},i)=>`<li><span class="project-number">${String(i+1).padStart(2,'0')}</span><span class="project-entry"><span data-project-name data-project-type="${type}">${name}</span><small>${projectTypes[type]}</small></span><img src="./star-nine.svg" width="18" height="18" alt=""></li>`).join('\n');
 await writeFile(new URL('./dist/projects.html',import.meta.url),`<!doctype html>
 <html lang="en">${projectHead}<body class="projects-page"><a class="skip" href="#main">Skip to content</a>${projectHeader}
 <main id="main">

@@ -52,39 +52,56 @@ try {
    }`
  });
  scene.add(new THREE.Mesh(new THREE.SphereGeometry(2,48,32),volume));
- // Three inclined elliptical lanes: shared by the fine gold paths and names.
- const lanes=[{tilt:.65,offset:-1.1},{tilt:-.75,offset:0},{tilt:.65,offset:1.1}];
+ // Each circular orbit has its own plane through the centre of the cloud.
+ // The paths and labels use exactly the same transformed world coordinates.
+ const lanes=[
+  {rotation:new THREE.Euler(1.0,.3,-.5),radius:2.7,speed:.055},
+  {rotation:new THREE.Euler(.85,-.45,.8),radius:2.8,speed:-.045},
+  {rotation:new THREE.Euler(.9,.3,2.0),radius:2.9,speed:.04},
+ ];
  const point=new THREE.Vector3();
- function orbitPoint(angle,lane,target){return target.set(Math.cos(angle)*2.9,Math.sin(angle)*lane.tilt+lane.offset,Math.sin(angle)*1.65);}
+ function orbitPoint(angle,lane,target){return target.set(Math.cos(angle)*lane.radius,Math.sin(angle)*lane.radius,0).applyEuler(lane.rotation);}
  for(const lane of lanes){
   const points=Array.from({length:181},(_,i)=>orbitPoint(i/180*Math.PI*2,lane,new THREE.Vector3()));
   const line=new THREE.Line(new THREE.BufferGeometry().setFromPoints(points),new THREE.LineBasicMaterial({color:0xc7a06c,transparent:true,opacity:.16,depthWrite:false}));scene.add(line);
  }
- const names=[...document.querySelectorAll('[data-project-name]')].map(el=>el.textContent);
- const labels=names.map((name,i)=>{const el=document.createElement('span');el.className='orbit-name';el.textContent=name;labelsHost.append(el);return {el,lane:lanes[i%3],phase:Math.floor(i/3)*Math.PI/2+(i%3)*.6};});
+ const projects=[...document.querySelectorAll('[data-project-name]')].map(el=>({name:el.textContent,type:Number(el.dataset.projectType)}));
+ const assigned=[0,0,0];
+ const labels=projects.map(({name,type})=>{
+  const count=projects.filter(project=>project.type===type).length;
+  const el=document.createElement('span');el.className='orbit-name';el.textContent=name;labelsHost.append(el);
+  return {el,lane:lanes[type],phase:assigned[type]++/count*Math.PI*2+type*.6};
+ });
  let paused=reduced.matches,visible=true,elapsed=0,last=0,w=1,h=1;
  function draw(){
   volume.uniforms.time.value=elapsed;
   renderer.render(scene,camera);
   for(const {el,lane,phase} of labels){
-   orbitPoint(phase+elapsed*.065,lane,point);
+   orbitPoint(phase+elapsed*lane.speed,lane,point);
    const depth=point.z;point.project(camera);
-   // Keep labels inside the canvas at every width, including narrow phones.
-   const scale=.82+(depth+1.65)/3.3*.25;
-   const half=Math.min(el.offsetWidth*scale/2+10,w/2);
-   const x=Math.max(half,Math.min(w-half,(point.x*.5+.5)*w));
-   const spread=camera.aspect<1?1.6:1;
-   const y=Math.max(18,Math.min(h-18,(-point.y*.5*spread+.5)*h));
+   // Project the same coordinates as the paths; fit the camera on resize.
+   const proximity=THREE.MathUtils.clamp((depth+lane.radius)/(2*lane.radius),0,1);
+   const scale=.82+proximity*.25;
+   const x=(point.x*.5+.5)*w;
+   const y=(-point.y*.5+.5)*h;
    el.style.transform=`translate(${x}px,${y}px) translate(-50%,-50%) scale(${scale})`;
-   el.style.opacity=String(.42+(depth+1.65)/3.3*.58);
-   el.style.zIndex=String(Math.round((depth+2)*10));
+   el.style.opacity=String(.42+proximity*.58);
+   el.style.zIndex=String(Math.round(proximity*100));
   }
  }
  function tick(now){frame=0;if(paused||!visible||document.hidden||lost)return;elapsed+=Math.min((now-last)/1000,.05);last=now;draw();frame=requestAnimationFrame(tick);}
  function start(){if(!frame&&!paused&&visible&&!document.hidden&&!lost){last=performance.now();frame=requestAnimationFrame(tick);}}
  function stop(){cancelAnimationFrame(frame);frame=0;}
  function sync(){button.textContent=paused?'Resume motion':'Pause motion';button.setAttribute('aria-pressed',String(paused));}
- function resize(){w=host.clientWidth;h=host.clientHeight;if(!w||!h||lost)return;renderer.setSize(w,h,false);camera.aspect=w/h;camera.position.z=camera.aspect<1?13:9;camera.updateProjectionMatrix();volume.uniforms.eye.value.copy(camera.position);draw();}
+ function resize(){
+  w=host.clientWidth;h=host.clientHeight;if(!w||!h||lost)return;
+  renderer.setSize(w,h,false);camera.aspect=w/h;
+  const widest=Math.max(...labels.map(({el})=>el.offsetWidth))*1.07;
+  const usable=Math.max(.25,(w-widest-24)/w);
+  const fit=2.9/(Math.tan(THREE.MathUtils.degToRad(camera.fov/2))*camera.aspect*usable);
+  camera.position.z=Math.max(9,Math.sqrt(2.9*2.9+fit*fit));
+  camera.updateProjectionMatrix();volume.uniforms.eye.value.copy(camera.position);draw();
+ }
  button.hidden=false;button.addEventListener('click',()=>{paused=!paused;sync();paused?stop():start();});
  reduced.addEventListener('change',e=>{paused=e.matches;sync();paused?stop():start();});
  document.addEventListener('visibilitychange',()=>document.hidden?stop():start());
