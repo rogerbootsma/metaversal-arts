@@ -31,7 +31,7 @@ const projectHead=home.slice(home.indexOf('<head>'),home.indexOf('</head>')+7)
  .replace(/<title>.*?<\/title>/,'<title>Projects — Metaversal Arts</title>')
  .replace(/  <script[^\n]+\n/g,'')
  .replace(/<meta name="description"[^>]+>/,'<meta name="description" content="The Metaversal Arts project constellation. Art, tools and other worlds in orbit.">')
- .replace('</head>','<link rel="stylesheet" href="./projects.css?v=orbit-planes-3">\n<script type="module" src="./projects-scene.js?v=orbit-planes-3"></script>\n</head>');
+ .replace('</head>','<link rel="stylesheet" href="./projects.css?v=constellation-4">\n<script type="module" src="./projects-scene.js?v=constellation-4"></script>\n</head>');
 const projectHeader=header.replace('href="./projects.html"','href="./projects.html" aria-current="page"');
 const items=projects.map(({name,type},i)=>`<li><span class="project-number">${String(i+1).padStart(2,'0')}</span><span class="project-entry"><span data-project-name data-project-type="${type}">${name}</span><small>${projectTypes[type]}</small></span><img src="./star-nine.svg" width="18" height="18" alt=""></li>`).join('\n');
 await writeFile(new URL('./dist/projects.html',import.meta.url),`<!doctype html>
@@ -39,7 +39,8 @@ await writeFile(new URL('./dist/projects.html',import.meta.url),`<!doctype html>
 <main id="main">
  <section class="constellation" aria-labelledby="projects-title">
   <div class="constellation-heading"><p class="eyebrow">THE METAVERSAL ARTS CONSTELLATION</p><h1 id="projects-title">Worlds in <em>orbit.</em></h1></div>
-  <div class="cloud-stage" id="cloud-stage" role="img" aria-label="Ivory and gold project names orbit a softly glowing cloud of mist."><canvas id="project-cloud" aria-hidden="true"></canvas><div id="orbit-labels" aria-hidden="true"></div></div>
+  <div class="orbit-categories" role="group" aria-label="Highlight a project orbit" hidden>${projectTypes.map((name,i)=>`<button type="button" data-orbit="${i}" aria-pressed="false"><span aria-hidden="true">0${i+1}</span>${name}</button>`).join('')}</div>
+  <div class="cloud-stage" id="cloud-stage" role="img" aria-label="Ivory and gold project names orbit a luminous, breathing cloud of mist. Three tilted rings represent tools and creation, worlds and identities, and art and media."><canvas id="project-cloud" aria-hidden="true"></canvas><svg id="orbit-connectors" aria-hidden="true"></svg><div id="orbit-labels" aria-hidden="true"></div></div>
   <div class="constellation-bottom"><span class="eyebrow">${String(projects.length).padStart(2,'0')} PROJECTS · ONE EXPANDING UNIVERSE</span><a class="text-link" href="#project-directory">Explore the constellation <span aria-hidden="true">↓</span></a><button class="motion" id="project-motion" type="button" aria-pressed="false" hidden>Pause motion</button></div>
   <p id="cloud-fallback" hidden>The animated cloud is unavailable on this device. All projects are listed below.</p>
  </section>

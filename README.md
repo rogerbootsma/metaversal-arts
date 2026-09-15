@@ -34,6 +34,8 @@ The Projects navigation opens `dist/projects.html`. Edit the names and provision
 
 The mist breathes over a ten-second cycle. Its density uses four-dimensional value noise (x, y, z, time), interpolating 16 lattice corners with quintic smoothing; three octaves and a domain warp let the internal shapes evolve continuously. Motion respects reduced-motion preferences, can be paused, and stops offscreen or when the tab is hidden. A static directory remains available without JavaScript or WebGL.
 
+Category buttons preview an orbit on hover/focus and toggle a persistent selection on click/tap. The selection also highlights the corresponding directory entries. Labels ease apart with fine leader lines while their anchors stay on the orbital paths. Labels and rings use an analytic cloud-transmission approximation for depth fading; the cloud itself remains raymarched 4D noise, with tone-mapped ivory lighting and gold shadows. No preferences or visitor data are stored.
+
 1. Verify domain ownership in the GitHub account's Pages settings using GitHub's unique TXT record. Keep this verification record.
 2. Set the custom domain in the repository's Pages settings before pointing public DNS at it.
 3. In the active DNS provider (Namecheap Advanced DNS if Namecheap hosts the nameservers), use four A records for `@`: `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`. Point `www` via CNAME to `rogerbootsma.github.io`.

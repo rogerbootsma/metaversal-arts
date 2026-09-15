@@ -2,3 +2,23 @@
 
 .project-entry{display:flex;flex-direction:column;gap:7px}.project-entry small{font-size:12px;letter-spacing:.02em;color:#a79985}
 
+/* Refined framing, category navigation, and legible orbital annotations. */
+.constellation{min-height:690px;height:calc(100svh - 110px);max-height:940px}
+.constellation-heading{top:35px}
+.constellation h1{font-size:clamp(44px,5.3vw,76px)}
+.cloud-stage{inset:155px 0 83px;background:radial-gradient(ellipse at center,#ad7b3310,transparent 62%)}
+.orbit-categories{position:absolute;top:52px;right:5%;z-index:3;display:flex;gap:8px;max-width:46%;flex-wrap:wrap;justify-content:flex-end}
+.orbit-categories[hidden]{display:none}
+.orbit-categories button{cursor:pointer;background:#101210;border:1px solid #39372e;border-radius:30px;color:#c9c6bc;padding:11px 15px;font-size:14px;transition:color .25s,border-color .25s,background .25s}
+.orbit-categories button span{color:#b89460;font-size:11px;margin-right:9px}
+.orbit-categories button:hover,.orbit-categories button:focus-visible,.orbit-categories button[aria-pressed=true]{color:#fff3de;border-color:#bc955e;background:#30281c}
+#orbit-connectors{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+#orbit-connectors line{stroke:#d9b078;stroke-width:.65}
+#orbit-connectors circle{fill:#f0ca8e}
+.orbit-name{font-size:clamp(14px,1.45vw,21px);font-weight:500;text-shadow:0 1px 5px #000,0 0 12px #090b0c;letter-spacing:-.015em}
+.orbit-name::before{display:none}
+.orbit-name[data-type='0']{color:#f1d1a1}.orbit-name[data-type='1']{color:#f5f1e7}.orbit-name[data-type='2']{color:#dfb36e}
+.project-directory li{transition:opacity .25s,color .25s}.project-directory li.orbit-muted{opacity:.3}.project-directory li.orbit-selected{color:#ffe3b6}
+@media(max-width:1100px){.orbit-categories{top:137px;left:5%;right:auto;max-width:90%;justify-content:flex-start}.cloud-stage{inset:185px 0 90px}.constellation{min-height:710px}}
+@media(max-width:600px){.constellation{min-height:650px;height:auto}.constellation-heading{top:29px}.constellation h1{font-size:48px}.orbit-categories{top:126px;left:6%;right:6%;max-width:none;gap:6px}.orbit-categories button{font-size:12px;padding:9px 10px}.orbit-categories button span{display:none}.cloud-stage{inset:172px 0 110px}.constellation-bottom{bottom:22px;gap:14px}.constellation-bottom>.eyebrow{font-size:10px}.orbit-name{font-size:14px}.constellation-bottom .text-link{padding-top:0}.constellation-bottom .motion{font-size:11px}}
+@media(prefers-reduced-motion:reduce){.orbit-categories button,.project-directory li{transition:none}}
