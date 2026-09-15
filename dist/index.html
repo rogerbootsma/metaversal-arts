@@ -9,15 +9,15 @@
   <meta name="theme-color" content="#090b0c">
   <title>Metaversal Arts — Beyond the ordinary</title>
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./style.css">
-  <script src="./ui.js" defer></script>
+  <link rel="stylesheet" href="./style.css?v=contact-20260915">
+  <script src="./ui.js?v=contact-20260915" defer></script>
   <script src="./scene.js" type="module"></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
   <header>
     <a class="brand" href="#" aria-label="Metaversal Arts home"><span class="brandmark" aria-hidden="true">m<span><img class="brand-star" src="./star-nine.svg" width="25" height="25" alt=""></span></span><span>METAVERSAL<span class="brand-bottom">ARTS</span></span></a>
-    <nav aria-label="Main navigation"><a href="#explorations">Explorations</a><a href="#studio">The studio</a></nav>
+    <nav aria-label="Main navigation"><a href="#explorations">Explorations</a><a href="#studio">The studio</a><a href="#contact">Contact</a></nav>
   </header>
   <main id="main">
     <section class="hero" aria-labelledby="hero-title">
@@ -36,6 +36,19 @@
       </div>
     </section>
     <section class="studio section" id="studio" aria-labelledby="studio-title"><p class="eyebrow">02 / THE STUDIO</p><div><h2 id="studio-title">A different perspective<br>is a beginning.</h2><p>Metaversal Arts is the independent creative practice of Roger Bootsma in Vienna. Bringing together 3D animation, procedural systems and immersive worlds, it explores the space where artistic intuition meets technical possibility.</p></div></section>
+    <section class="contact section" id="contact" aria-labelledby="contact-title">
+      <div class="contact-intro"><p class="eyebrow">03 / START A CONVERSATION</p><h2 id="contact-title">Something<br><em>in mind?</em></h2><p>A world to build. A tool to imagine.<br>An idea that needs a different perspective.</p><a class="contact-address" href="mailto:contact@metaversalarts.io">contact@metaversalarts.io <span aria-hidden="true">↗</span></a><p class="contact-location">METAVERSAL ARTS · VIENNA, AUSTRIA</p></div>
+      <div class="enquiry-panel"><div class="enquiry-heading"><span class="eyebrow">YOUR NEXT EXPLORATION</span><img src="./star-nine.svg" width="30" height="30" alt=""></div>
+        <form id="enquiry-form" hidden aria-label="Prepare a project enquiry">
+          <div class="enquiry-row"><label for="enquiry-name">Your name<input id="enquiry-name" name="name" autocomplete="name" maxlength="100" placeholder="How should we address you?" required></label><label for="enquiry-email">Your email<input id="enquiry-email" name="email" type="email" autocomplete="email" maxlength="200" placeholder="you@example.com" required></label></div>
+          <fieldset class="enquiry-interests"><legend>What are you imagining?</legend><div class="interest-options"><label><input type="radio" name="interest" value="3D & animation" checked><span>3D & animation</span></label><label><input type="radio" name="interest" value="Creative tools"><span>Creative tools</span></label><label><input type="radio" name="interest" value="Immersive worlds"><span>Immersive worlds</span></label><label><input type="radio" name="interest" value="Something else"><span>Something else</span></label></div></fieldset>
+          <label class="enquiry-message" for="enquiry-message">A little about your idea<textarea id="enquiry-message" name="message" rows="4" maxlength="1500" placeholder="What would you like to bring into the world?" required></textarea></label>
+          <div class="enquiry-actions"><button class="prepare-email" type="submit">Prepare email <span aria-hidden="true">↗</span></button><button class="copy-enquiry" id="copy-enquiry" type="button">Copy enquiry</button></div>
+          <p class="enquiry-note">Opens a draft in your email app. Review it there and send when you’re ready.</p><p id="enquiry-status" class="enquiry-status" role="status" aria-live="polite"></p>
+        </form><noscript><p>Email the studio at <a href="mailto:contact@metaversalarts.io">contact@metaversalarts.io</a> to tell us about your idea.</p></noscript>
+        <div class="enquiry-bottom"><span>GOOD WORK STARTS WITH A CONVERSATION.</span><a href="./privacy.html">Privacy</a></div>
+      </div>
+    </section>
   </main>
   <footer><a class="footer-name" href="#">Metaversal Arts<span aria-hidden="true"><img class="brand-star" src="./star-nine.svg" width="25" height="25" alt=""></span></a><div class="footer-bottom"><span>© 2026 Metaversal Arts · Roger Bootsma</span><span>IMAGINATION, IN EVERY DIMENSION.</span><nav aria-label="Legal"><a href="./legal.html">Legal notice</a><a href="./privacy.html">Privacy</a><a href="./credits.html">Credits</a></nav></div></footer>
 </body>

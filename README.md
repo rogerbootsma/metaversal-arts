@@ -1,6 +1,6 @@
 # Metaversal Arts
 
-Static landing page for GitHub Pages. Original Three.js volumetric sculpture, responsive layout, reduced-motion support, and legal/privacy/credits pages. No analytics, cookies, remote fonts, remote scripts, forms, or backend.
+Static landing page for GitHub Pages. Original Three.js volumetric sculpture, responsive layout, reduced-motion support, and legal/privacy/credits pages. No analytics, cookies, remote fonts, remote scripts, or backend. The contact panel prepares an email locally for contact@metaversalarts.io; visitors send it through their email app. It also offers an explicit copy-to-clipboard fallback.
 
 ## Local preview
 
@@ -36,7 +36,7 @@ Custom domain: `metaversalarts.io`.
 
 ## Security boundaries
 
-Every page has a restrictive meta Content Security Policy, referrer policy, disabled objects/forms, and same-origin assets. External new-tab links use `noopener noreferrer`. There are no site-owned accounts, stored data or secrets. Reduced motion is respected; rendering stops when hidden/offscreen and includes a pause control.
+Every page has a restrictive meta Content Security Policy, referrer policy, disabled objects and server form submissions, and same-origin assets. External new-tab links use `noopener noreferrer`. There are no site-owned accounts, stored data or secrets. Reduced motion is respected; rendering stops when hidden/offscreen and includes a pause control.
 
 GitHub Pages manages TLS and server headers. Meta CSP cannot enforce `frame-ancestors`, and cannot supply arbitrary HTTP response headers such as Permissions-Policy. Do not claim the page has these controls or is fully security-audited. The final HTTPS and DNS settings require live verification after publishing. Keep GitHub/Namecheap account two-factor authentication enabled.
 
@@ -50,4 +50,5 @@ GitHub Pages manages TLS and server headers. Meta CSP cannot enforce `frame-ance
 - [WKO legal notice guidance for sole proprietors](https://www.wko.at/oe/internetrecht/das-korrekte-website-impressum-nicht-fb-eingetr-eu.pdf)
 
 Site content and original artwork: copyright Roger Bootsma / Metaversal Arts. Three.js retains its separate MIT licence.
+
 

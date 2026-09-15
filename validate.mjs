@@ -11,7 +11,7 @@ for(const file of files){
  if(/<script(?![^>]*\bsrc=)[^>]*>/i.test(html))throw new Error('Unexpected inline script: '+file);
  for(const match of html.matchAll(/(?:href|src)="([^"#]+)(?:#[^"]*)?"/g)){
    const url=match[1];if(/^(https:|data:|mailto:|tel:)/.test(url))continue;
-   const target=resolve(dirname(resolve(root,file)),url);
+   const target=resolve(dirname(resolve(root,file)),url.split("?")[0]);
    await stat(target);checked++;
  }
  if(process.argv.includes('--publish')&&/awaiting confirmation|publication details pending|contact information is pending/i.test(html))throw new Error('Complete confirmed legal details before publishing: '+file);
