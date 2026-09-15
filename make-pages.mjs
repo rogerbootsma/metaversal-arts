@@ -31,7 +31,7 @@ const projectHead=home.slice(home.indexOf('<head>'),home.indexOf('</head>')+7)
  .replace(/<title>.*?<\/title>/,'<title>Projects — Metaversal Arts</title>')
  .replace(/  <script[^\n]+\n/g,'')
  .replace(/<meta name="description"[^>]+>/,'<meta name="description" content="The Metaversal Arts project constellation. Art, tools and other worlds in orbit.">')
- .replace('</head>','<link rel="stylesheet" href="./projects.css?v=orbit-1">\n<script type="module" src="./projects-scene.js?v=orbit-1"></script>\n</head>');
+ .replace('</head>','<link rel="stylesheet" href="./projects.css?v=orbit-1">\n<script type="module" src="./projects-scene.js?v=orbit-4d-2"></script>\n</head>');
 const projectHeader=header.replace('href="./projects.html"','href="./projects.html" aria-current="page"');
 const items=projects.map((name,i)=>`<li><span class="project-number">${String(i+1).padStart(2,'0')}</span><span data-project-name>${name}</span><img src="./star-nine.svg" width="18" height="18" alt=""></li>`).join('\n');
 await writeFile(new URL('./dist/projects.html',import.meta.url),`<!doctype html>

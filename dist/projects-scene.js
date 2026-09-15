@@ -20,10 +20,15 @@ try {
   vertexShader:`varying vec3 localPosition;void main(){localPosition=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
   fragmentShader:`precision highp float;
    varying vec3 localPosition;uniform vec3 eye;uniform float time;
-   float hash(vec3 p){p=fract(p*.3183099+vec3(.1,.2,.3));p*=17.;return fract(p.x*p.y*p.z*(p.x+p.y+p.z));}
-   float noise(vec3 p){vec3 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
-    return mix(mix(mix(hash(i),hash(i+vec3(1,0,0)),f.x),mix(hash(i+vec3(0,1,0)),hash(i+vec3(1,1,0)),f.x),f.y),mix(mix(hash(i+vec3(0,0,1)),hash(i+vec3(1,0,1)),f.x),mix(hash(i+vec3(0,1,1)),hash(i+vec3(1,1,1)),f.x),f.y),f.z);}
-   float mist(vec3 q){return noise(q)*.57+noise(q*2.03)*.28+noise(q*4.07)*.15;}
+   float hash4(vec4 p){p=fract(p*vec4(.1031,.1030,.0973,.1099));p+=dot(p,p.wzxy+33.33);return fract((p.x+p.y)*(p.z+p.w));}
+   float slice4(vec4 i,vec3 f){
+    return mix(mix(mix(hash4(i),hash4(i+vec4(1,0,0,0)),f.x),mix(hash4(i+vec4(0,1,0,0)),hash4(i+vec4(1,1,0,0)),f.x),f.y),
+     mix(mix(hash4(i+vec4(0,0,1,0)),hash4(i+vec4(1,0,1,0)),f.x),mix(hash4(i+vec4(0,1,1,0)),hash4(i+vec4(1,1,1,0)),f.x),f.y),f.z);
+   }
+   // Interpolate 16 independent lattice corners in x, y, z and time.
+   // Quintic interpolation keeps motion smooth across temporal cell boundaries.
+   float noise4(vec4 p){vec4 i=floor(p),f=fract(p);f=f*f*f*(f*(f*6.-15.)+10.);return mix(slice4(i,f.xyz),slice4(i+vec4(0,0,0,1),f.xyz),f.w);}
+   float mist(vec4 q){return noise4(q)*.57+noise4(q*2.03)*.28+noise4(q*4.07)*.15;}
    void main(){vec3 ray=normalize(localPosition-eye);float b=dot(eye,ray),h=b*b-dot(eye,eye)+4.;if(h<0.)discard;
     float root=sqrt(h),start=-b-root,stepSize=root*2./48.;float alpha=0.;vec3 light=vec3(0.);
     // A ten-second breath with gentle, continuous acceleration at each turn.
@@ -32,9 +37,11 @@ try {
     for(int i=0;i<48;i++){
      vec3 p=(eye+ray*(start+(float(i)+.5)*stepSize))/expansion;
      float angle=p.y*.8+time*.065;float c=cos(angle),s=sin(angle);
-     vec3 q=vec3(c*p.x-s*p.z,p.y,s*p.x+c*p.z)*1.8+vec3(time*.025,-time*.04,0.);
+     vec3 q=vec3(c*p.x-s*p.z,p.y,s*p.x+c*p.z)*1.8;
      vec3 sway=vec3(sin(time*.18),cos(time*.15),sin(time*.12))*.12;
-     float n=mist(q+vec3(mist(q*.7+sway))*.9+sway);
+     float evolution=time*.075;
+     float warp=noise4(vec4(q*.7+sway,evolution*.7));
+     float n=mist(vec4(q+vec3(warp)*.9+sway,evolution));
      float envelope=1.-smoothstep(.65,1.85,length(p*vec3(1.,1.12,1.)));
      float density=smoothstep(.28,.72,n)*envelope*(1.+breath*.07);
      float a=1.-exp(-density*stepSize*1.55);
