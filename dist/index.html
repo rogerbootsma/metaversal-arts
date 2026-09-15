@@ -9,8 +9,8 @@
   <meta name="theme-color" content="#090b0c">
   <title>Metaversal Arts — Beyond the ordinary</title>
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./style.css?v=contact-20260915">
-  <script src="./ui.js?v=contact-20260915" defer></script>
+  <link rel="stylesheet" href="./style.css?v=contact-draft-v2">
+  <script src="./ui.js?v=contact-draft-v2" defer></script>
   <script src="./scene.js" type="module"></script>
 </head>
 <body>
@@ -44,7 +44,7 @@
           <fieldset class="enquiry-interests"><legend>What are you imagining?</legend><div class="interest-options"><label><input type="radio" name="interest" value="3D & animation" checked><span>3D & animation</span></label><label><input type="radio" name="interest" value="Creative tools"><span>Creative tools</span></label><label><input type="radio" name="interest" value="Immersive worlds"><span>Immersive worlds</span></label><label><input type="radio" name="interest" value="Something else"><span>Something else</span></label></div></fieldset>
           <label class="enquiry-message" for="enquiry-message">A little about your idea<textarea id="enquiry-message" name="message" rows="4" maxlength="1500" placeholder="What would you like to bring into the world?" required></textarea></label>
           <div class="enquiry-actions"><button class="prepare-email" type="submit">Prepare email <span aria-hidden="true">↗</span></button><button class="copy-enquiry" id="copy-enquiry" type="button">Copy enquiry</button></div>
-          <p class="enquiry-note">Opens a draft in your email app. Review it there and send when you’re ready.</p><p id="enquiry-status" class="enquiry-status" role="status" aria-live="polite"></p>
+          <p class="enquiry-note">Prepare your draft here, then choose Gmail, your email app, or copy it to send.</p><section id="email-draft" class="email-draft" aria-labelledby="email-draft-title" hidden><h3 id="email-draft-title" tabindex="-1">Your email is ready.</h3><p>Nothing has been sent. Choose where you’d like to send it.</p><div class="draft-options"><a id="open-gmail" class="prepare-email" href="https://mail.google.com/mail/" target="_blank" rel="noopener noreferrer">Open Gmail <span aria-hidden="true">↗</span></a><a id="open-email-app" class="copy-enquiry" href="mailto:contact@metaversalarts.io">Open email app</a></div><label for="email-draft-text">Or copy this draft into any email service<textarea id="email-draft-text" readonly rows="8" spellcheck="false"></textarea></label><button id="copy-draft" class="copy-enquiry" type="button">Copy prepared email</button></section><p id="enquiry-status" class="enquiry-status" role="status" aria-live="polite"></p>
         </form><noscript><p>Email the studio at <a href="mailto:contact@metaversalarts.io">contact@metaversalarts.io</a> to tell us about your idea.</p></noscript>
         <div class="enquiry-bottom"><span>GOOD WORK STARTS WITH A CONVERSATION.</span><a href="./privacy.html">Privacy</a></div>
       </div>
