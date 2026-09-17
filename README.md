@@ -13,7 +13,9 @@ Run `node validate.mjs` to check page links, assets, JavaScript syntax and secur
 - `dist/index.html`: landing-page copy and structure.
 - `dist/style.css`: page appearance and responsive rules.
 - `dist/scene.js`: original raymarched volume, curve geometry and motion.
-- `dist/planet-volume.js`: the Projects planet's dense body, mineral formations, ribbons and 4D cloud shell.
+- `dist/planet-volume.js`: the Projects planet's dense raymarched body, turquoise/copper strata and evolving 4D granular relief.
+- `dist/project-orbits.js`: twelve independent radii, inclinations and angular speeds.
+- `dist/project-moons.js`: solid procedurally textured moons and soft orbital dust/comet particles.
 - `dist/project-links.js`: ordered ASimulation destinations and hover/focus/tap disclosure.
 - `PLANET-RESEARCH.md`: source-linked research and artistic implementation choices.
 - `make-pages.mjs`: legal/privacy/credits copy; run it to regenerate these pages after editing.
@@ -33,11 +35,11 @@ Custom domain: `metaversalarts.io`.
 
 ## Project constellation
 
-The Projects navigation opens `dist/projects.html`. Edit the names and provisional type assignments in `projects.mjs`, then run `node make-pages.mjs` to regenerate the directory and shared navigation. `dist/projects-scene.js` reads these names and types, assigning each type to a different inclined circular plane around the locally rendered Three.js volume. Names and ring geometry share the same orbit function. Styling is in `dist/projects.css`. Names are presented as a directory without assuming that every project has a public website.
+The Projects navigation opens `dist/projects.html`. Edit the names and provisional type assignments in `projects.mjs`, then run `node make-pages.mjs` to regenerate the directory and shared navigation. `dist/projects-scene.js` reads these names and types, assigning each project to its own inclined circular plane around the locally rendered Three.js volume. Names and ring geometry share the same orbit function. Styling is in `dist/projects.css`. Names are presented as a directory without assuming that every project has a public website.
 
-The mist breathes over a ten-second cycle. Its density uses four-dimensional value noise (x, y, z, time), interpolating 16 lattice corners with quintic smoothing; three octaves and a domain warp let the internal shapes evolve continuously. Motion respects reduced-motion preferences, can be paused, and stops offscreen or when the tab is hidden. A static directory remains available without JavaScript or WebGL.
+The dense planet uses four-dimensional value noise (x, y, z, time), with a gentle ten-second modulation of its evolution. Turquoise and copper bands carry fine granular relief; there is no separate cloud shell. All twelve project moons have original procedural surface textures. Four small comet trails and sparse orbital dust use soft 3D particles, not simulated volumes. Motion respects reduced-motion preferences, can be paused, and stops offscreen or when the tab is hidden. A static directory remains available without JavaScript or WebGL.
 
-Category buttons preview an orbit on hover/focus and toggle a persistent selection on click/tap. The selection also highlights the corresponding directory entries. Labels ease apart with fine leader lines while their anchors stay on the orbital paths. Labels and rings use an analytic cloud-transmission approximation for depth fading; the cloud itself remains raymarched 4D noise, with tone-mapped ivory lighting and gold shadows. No preferences or visitor data are stored.
+Category buttons preview a project group on hover/focus and toggle a persistent selection on click/tap. The selection also highlights the corresponding directory entries. Each label follows its moon with a fixed offset. There is no collision avoidance, positional easing or screen-edge clamping: names pass by camera depth, and the camera fits the orbit system on resize. The dense planet occludes background moons and rings. Narrow layouts use smaller labels; occasional natural crossings remain visible. No preferences or visitor data are stored.
 
 1. Verify domain ownership in the GitHub account's Pages settings using GitHub's unique TXT record. Keep this verification record.
 2. Set the custom domain in the repository's Pages settings before pointing public DNS at it.

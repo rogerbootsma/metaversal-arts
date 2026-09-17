@@ -44,3 +44,7 @@
 @media(prefers-reduced-motion:reduce){.project-satellite{animation:none}.project-satellite:nth-child(2){offset-distance:33.333%}.project-satellite:nth-child(3){offset-distance:66.667%}}
 .constellation{min-height:780px;max-height:1080px}
 @media(max-width:600px){.constellation{min-height:710px}.cloud-stage{inset:172px 0 106px}}
+
+/* Fixed labels follow solid moons; smaller type leaves room for twelve paths. */
+.orbit-name{font-size:clamp(12px,1.12vw,17px)}
+@media(max-width:600px){.orbit-name{font-size:11px}.project-hub-trigger{padding:6px 8px}}

@@ -1,6 +1,6 @@
 import * as THREE from './vendor/three.module.min.js';
-// Original artistic shader: a dense planetary body, warped strata, ribbon fields,
-// and a participating cloud shell. This is not a physical atmosphere simulation.
+// Dense raymarched body with animated mineral strata and granular relief.
+// Artistic volume shading, without a separate atmosphere or cloud shell.
 export function createPlanetVolume(camera){
  const steps=innerWidth<700?56:72;
  return new THREE.ShaderMaterial({transparent:true,depthWrite:false,
@@ -18,43 +18,44 @@ export function createPlanetVolume(camera){
    float noise4(vec4 p){vec4 i=floor(p),f=fract(p);f=f*f*f*(f*(f*6.-15.)+10.);return mix(slice4(i,f.xyz),slice4(i+vec4(0,0,0,1),f.xyz),f.w);}
    float mist(vec4 q){return noise4(q)*.57+noise4(q*2.03)*.28+noise4(q*4.07)*.15;}
 
+   float relief(vec3 p,float t){return noise4(vec4(p*12.,t))*.65+noise4(vec4(p*38.,t))*.35;}
    void main(){
-    vec3 ray=normalize(localPosition-eye);float b=dot(eye,ray),h=b*b-dot(eye,eye)+4.41;if(h<0.)discard;
+    vec3 ray=normalize(localPosition-eye);float b=dot(eye,ray),h=b*b-dot(eye,eye)+3.61;if(h<0.)discard;
     float root=sqrt(h),start=-b-root,stepSize=root*2./float(${steps});
-    vec3 light=vec3(0.);float alpha=0.;vec3 sun=normalize(vec3(-.65,.5,.75));
-    float breath=1.+sin(time*.62831853)*.018;
+    float t=time*.025+sin(time*.62831853)*.008;float angle=time*.018+.22;float c=cos(angle),s=sin(angle);
+    mat3 turn=mat3(c,0.,s,0.,1.,0.,-s,0.,c);
+    vec3 light=vec3(0.);float alpha=0.;vec3 sun=normalize(vec3(-.65,.65,1.));
     for(int i=0;i<${steps};i++){
-     vec3 p=eye+ray*(start+(float(i)+.5)*stepSize);float r=length(p);vec3 normal=p/max(r,.001);
-     float angle=time*.024+.22;float c=cos(angle),s=sin(angle);
-     vec3 q=vec3(c*p.x-s*p.z,p.y,s*p.x+c*p.z);
-     float warp=noise4(vec4(q*1.45,time*.014));
-     float terrain=mist(vec4(q*2.2+vec3(warp*.9),time*.009));
-     float land=smoothstep(.43,.58,terrain);
-     float coast=exp(-pow((terrain-.495)*38.,2.));
-     float relief=noise4(vec4(q*10.5,time*.02));
-     float body=(1.-smoothstep(1.55,1.66+land*.035,r))*7.;
-     float day=max(dot(normal,sun),0.);float diffuse=.12+day*.95;
-     vec3 ocean=mix(vec3(.015,.038,.075),vec3(.055,.30,.43),relief*.7+day*.3);
-     vec3 mineral=mix(vec3(.17,.10,.04),vec3(.78,.52,.21),terrain*.65+relief*.35);
-     vec3 bodyColor=mix(ocean,mineral,land)*diffuse+coast*vec3(.38,.24,.07)*(.3+day);
-     float cloudNoise=mist(vec4(q*3.2+vec3(warp*1.4,time*.023,0.),time*.055));
-     float cloudShell=smoothstep(1.63,1.73,r)*(1.-smoothstep(1.87*breath,2.06*breath,r));
-     float cloud=smoothstep(.44,.7,cloudNoise)*cloudShell*1.9;
-     float ribbonWave=sin(q.y*11.+warp*8.+q.x*1.7+time*.07)*.5+.5;
-     float ribbon=pow(ribbonWave,20.)*exp(-pow((r-(1.77+warp*.1))*13.,2.))*.7;
-     float haze=exp(-pow((r-1.9)*9.,2.))*.11;
-     float density=body+cloud+ribbon+haze;
-     vec3 cloudColor=mix(vec3(.14,.21,.27),vec3(.9,.88,.77),.22+day*.78);
-     vec3 ribbonColor=mix(vec3(.13,.43,.62),vec3(1.,.65,.24),smoothstep(.3,.65,warp))*(.7+day);
-     vec3 hazeColor=mix(vec3(.08,.25,.4),vec3(.47,.62,.67),day);
-     vec3 color=(bodyColor*body+cloudColor*cloud+ribbonColor*ribbon+hazeColor*haze)/max(density,.001);
-     float a=1.-exp(-density*stepSize);
-     light+=(1.-alpha)*a*color;alpha+=(1.-alpha)*a;
+     vec3 p=eye+ray*(start+(float(i)+.5)*stepSize);float r=length(p);vec3 q=turn*p;
+     float warp=noise4(vec4(q*2.1,t));
+     float texture=relief(q,t);
+     float surface=1.79+(texture-.5)*.085+(warp-.5)*.045;
+     float density=(1.-smoothstep(surface-.055,surface+.012,r))*42.;
+     if(density<.015)continue;
+     vec3 radial=normalize(p);
+     float latitude=q.y*.93+q.x*.24+warp*.28;
+     float strata=sin(latitude*13.+warp*4.5);
+     float thread=sin(latitude*61.+warp*18.);
+     float cool=smoothstep(-.23,.36,latitude+strata*.11);
+     vec3 copper=mix(vec3(.19,.047,.018),vec3(.94,.43,.11),.4+.6*texture);
+     vec3 teal=mix(vec3(.018,.12,.16),vec3(.19,.64,.66),.3+.7*texture);
+     vec3 color=mix(copper,teal,cool);
+     float cream=pow(.5+.5*strata,12.)*.36+pow(.5+.5*thread,22.)*.14;
+     color=mix(color,vec3(.86,.79,.61),cream);
+     vec3 grad=vec3(relief(q+vec3(.009,0,0),t)-texture,relief(q+vec3(0,.009,0),t)-texture,relief(q+vec3(0,0,.009),t)-texture)/.009;
+     vec3 localNormal=normalize(q);grad-=localNormal*dot(grad,localNormal);
+     vec3 normal=normalize(radial-mat3(c,0.,-s,0.,1.,0.,s,0.,c)*grad*.045);
+     float day=max(dot(normal,sun),0.);
+     float grain=noise4(vec4(q*135.,t*.7));
+     float sparkle=pow(grain,16.)*pow(max(dot(reflect(-sun,normal),-ray),0.),10.);
+     color*= (.12+day*1.13)*(.72+grain*.5);
+     color+=vec3(.7,.88,.84)*sparkle*.8;
+     float a=1.-exp(-density*stepSize);light+=(1.-alpha)*a*color;alpha+=(1.-alpha)*a;
      if(alpha>.995)break;
     }
+    if(alpha<.01)discard;
     vec3 radiance=light/max(alpha,.001);
-    // Mild display lift preserves blue depth and warm mineral highlights.
-    gl_FragColor=vec4(pow(vec3(1.)-exp(-radiance*1.65),vec3(.82)),alpha);
+    gl_FragColor=vec4(pow(vec3(1.)-exp(-radiance*1.8),vec3(.84)),alpha);
    }`
  });
 }

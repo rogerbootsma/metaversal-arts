@@ -8,9 +8,11 @@
 
 ## Implemented composition
 
-A larger planetary volume with blue depths, amber mineral/continent fields, layered cloud density, luminous ribbon fields and a subtle ten-second atmosphere pulse. The body turns slowly while the four-dimensional cloud field evolves independently. The three project-type orbits remain intact. Camera framing favors a larger planet; label anchors stay on the rings while edge annotations use leader lines.
+The final user reference replaces the detached atmosphere with a dense, granular gas-giant body: turquoise upper bands, copper/gold lower bands, and warped pearl strata. A 4D field changes slowly with a gentle ten-second modulation. `dist/planet-volume.js` raymarches the body's density in 56 narrow-screen or 72 desktop steps with early opacity termination. Finite-difference relief shading gives the dense skin a pebbled appearance. This is an artistic approximation, not a physically accurate scattering or atmosphere model.
 
-`dist/planet-volume.js` owns the original procedural shader. It uses 56 ray steps on initial narrow viewports and 72 on wider viewports, with early opacity termination. These are quality budgets, not performance claims. The surface/body and cloud shell are generated in the same raymarch. All resources are locally hosted.
+Each of twelve projects has a unique radius and inclined orbital plane in `dist/project-orbits.js`. A small solid sphere with a seeded procedural texture follows each path. Its label follows the same coordinates with a fixed vertical offset, with no avoidance or screen-edge clamping. Absolute camera depth determines label stacking. Saturn-inspired thin ring meshes use antialiased radial strata and subdued group colour variations. Sparse dust and four comet trails are soft three-dimensional particles, not volumetric gas simulations. Analytic body intersections occlude the moons, dust and rings behind the dense planet.
+
+The earlier Three.js volume and domain-warp references inform this implementation. Bruneton remains background research only; no atmospheric shell or scattering lookup tables are included. All resources are locally hosted. The visual references are guidance only; no reference artwork is embedded in the website.
 
 ## ASimulation interaction
 
