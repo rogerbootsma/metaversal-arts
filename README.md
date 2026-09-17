@@ -6,17 +6,17 @@ Static landing page for GitHub Pages. Original Three.js volumetric sculpture, re
 
 Run `node preview.mjs` and visit `http://127.0.0.1:4173`.
 
-Run `node validate.mjs` to check page links, assets, JavaScript syntax and security-policy presence. Run `node --test test-project-links.mjs` for the ASimulation disclosure regression checks. The Projects scene has also been inspected in the browser at desktop and narrow widths, including shader compilation, console errors, keyboard order, pause and menu bounds.
+Run `node validate.mjs` to check page links, assets, JavaScript syntax and security-policy presence. Run `node --test test-project-links.mjs` for the ASimulation and BlenderMonk disclosure regression checks. The Projects scene has also been inspected in the browser at desktop and narrow widths, including shader compilation, console errors, keyboard order, pause and menu bounds.
 
 ## Editing
 
 - `dist/index.html`: landing-page copy and structure.
 - `dist/style.css`: page appearance and responsive rules.
 - `dist/scene.js`: original raymarched volume, curve geometry and motion.
-- `dist/planet-volume.js`: the Projects planet's dense raymarched body, turquoise/copper strata and evolving 4D granular relief.
+- `dist/planet-volume.js`: the Projects planet, atmosphere and twelve shallow ring volumes in one depth integration.
 - `dist/project-orbits.js`: twelve independent radii, inclinations and angular speeds.
-- `dist/project-moons.js`: solid procedurally textured moons and soft orbital dust/comet particles.
-- `dist/project-links.js`: ordered ASimulation destinations and hover/focus/tap disclosure.
+- `dist/project-moons.js`: solid procedurally textured moons, instanced debris and soft orbital dust/comet particles.
+- `dist/project-links.js`: ordered ASimulation and BlenderMonk destinations and hover/focus/tap disclosure.
 - `PLANET-RESEARCH.md`: source-linked research and artistic implementation choices.
 - `make-pages.mjs`: legal/privacy/credits copy; run it to regenerate these pages after editing.
 - `dist/vendor/`: locally served Three.js 0.180.0 and MIT licence.
@@ -37,9 +37,11 @@ Custom domain: `metaversalarts.io`.
 
 The Projects navigation opens `dist/projects.html`. Edit the names and provisional type assignments in `projects.mjs`, then run `node make-pages.mjs` to regenerate the directory and shared navigation. `dist/projects-scene.js` reads these names and types, assigning each project to its own inclined circular plane around the locally rendered Three.js volume. Names and ring geometry share the same orbit function. Styling is in `dist/projects.css`. Names are presented as a directory without assuming that every project has a public website.
 
-The dense planet uses four-dimensional value noise (x, y, z, time), with a gentle ten-second modulation of its evolution. Turquoise and copper bands carry fine granular relief; there is no separate cloud shell. All twelve project moons have original procedural surface textures. Four small comet trails and sparse orbital dust use soft 3D particles, not simulated volumes. Motion respects reduced-motion preferences, can be paused, and stops offscreen or when the tab is hidden. A static directory remains available without JavaScript or WebGL.
+The approved atmospheric revision uses a softer plum/copper planet with layered weather, slow white cloud ribbons and a soft blue atmospheric limb. Its four-dimensional noise evolves with a gentle ten-second modulation. Twelve structured, shallow volumetric rings and the planet share a front-to-back raymarch for correct ring/planet crossings. Dust, small instanced rock debris and comet particles rotate on fixed planes. These are artistic volume fields rather than a physical scattering solver.
 
-Category buttons preview a project group on hover/focus and toggle a persistent selection on click/tap. The selection also highlights the corresponding directory entries. Each label follows its moon with a fixed offset. There is no collision avoidance, positional easing or screen-edge clamping: names pass by camera depth, and the camera fits the orbit system on resize. The dense planet occludes background moons and rings. Narrow layouts use smaller labels; occasional natural crossings remain visible. No preferences or visitor data are stored.
+ZXY rotation order gives the twelve paths genuinely distinct world-space planes. Nonlinear radial spacing separates close, middle and distant paths; outer moons move more slowly and perspective changes their apparent size as they approach. Outer ring density and dust become gradually more transparent, with subtle hue and opacity variation. Names follow their textured moons with fixed offsets and depth ordering, without collision avoidance or screen-edge clamping. Desktop presentation magnifies the full scene 1.8x, allowing outer rings to cross behind the heading and beyond the scene edges; narrow screens ease toward the overview. Category highlighting, pause, reduced motion, tab visibility, offscreen suspension and the static accessible directory remain supported. Run `node --test test-project-orbits.mjs test-project-links.mjs` for orbit geometry and menu checks.
+
+The user approved this atmospheric revision for publication after reviewing the Codex preview on 17 September 2026.
 
 1. Verify domain ownership in the GitHub account's Pages settings using GitHub's unique TXT record. Keep this verification record.
 2. Set the custom domain in the repository's Pages settings before pointing public DNS at it.

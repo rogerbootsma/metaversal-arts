@@ -3,7 +3,7 @@ import * as THREE from './vendor/three.module.min.js';
 // Analytic opaque-body occlusion also works with the raymarched planet.
 const occultation=`
  float planetVisibility(vec3 p){vec3 delta=p-eye;float d=length(delta);vec3 ray=delta/d;
- float b=dot(eye,ray),h=b*b-dot(eye,eye)+3.1329;
+ float b=dot(eye,ray),h=b*b-dot(eye,eye)+2.8224;
  if(h>0.&&-b-sqrt(h)<d)return 0.;return 1.;}
 `;
 export function createProjectMoon(index,camera){
@@ -11,7 +11,11 @@ export function createProjectMoon(index,camera){
  const material=new THREE.ShaderMaterial({transparent:true,depthWrite:true,
   uniforms:{eye:{value:camera.position.clone()},tint:{value:new THREE.Color(palette[index%palette.length])},seed:{value:index*13.71},strength:{value:1}},
   vertexShader:`varying vec3 worldPoint;varying vec3 localPoint;varying vec3 worldNormal;
-   void main(){localPoint=position;worldPoint=(modelMatrix*vec4(position,1.)).xyz;worldNormal=normalize(mat3(modelMatrix)*normal);gl_Position=projectionMatrix*viewMatrix*vec4(worldPoint,1.);}`,
+   void main(){localPoint=position;vec4 p=vec4(position,1.);vec3 n=normal;
+   #ifdef USE_INSTANCING
+    p=instanceMatrix*p;n=mat3(instanceMatrix)*n;
+   #endif
+   worldPoint=(modelMatrix*p).xyz;worldNormal=normalize(mat3(modelMatrix)*n);gl_Position=projectionMatrix*viewMatrix*vec4(worldPoint,1.);}`,
   fragmentShader:`uniform vec3 eye;uniform vec3 tint;uniform float seed;uniform float strength;varying vec3 worldPoint;varying vec3 localPoint;varying vec3 worldNormal;
    ${occultation}
    float hash(vec3 p){p=fract(p*.1031);p+=dot(p,p.yzx+33.33);return fract((p.x+p.y)*p.z);}
@@ -26,7 +30,7 @@ export function createProjectMoon(index,camera){
     gl_FragColor=vec4(color,strength);
    }`
  });
- const radius=.060+(index%4)*.012;
+ const radius=.070+index*.009+(index%3)*.012;
  const mesh=new THREE.Mesh(new THREE.SphereGeometry(radius,28,20),material);
  mesh.renderOrder=1;
  return {mesh,material,radius};

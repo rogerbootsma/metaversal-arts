@@ -4,21 +4,33 @@ export const asimulationLinks = [
   {label:'Website',url:'https://asimulation.io/',icon:'globe'},
   {label:'YouTube',url:'https://www.youtube.com/channel/UCunF_Jnya4XHpbIR7E-VYog',icon:'video'},
 ];
+export const blendermonkLinks = [
+ {label:'Facebook',url:'https://www.facebook.com/Blendermonk',icon:'facebook'},
+ {label:'Superhive',url:'https://superhivemarket.com/creators/blendermonk',icon:'hive'},
+ {label:'YouTube',url:'https://www.youtube.com/@Blendermonk',icon:'video'},
+];
+export const projectHubs = {
+ 'asimulation.io':{id:'asimulation',name:'ASimulation',title:'asimulation.io',description:'website and social links',links:asimulationLinks},
+ 'BlenderMonk':{id:'blendermonk',name:'BlenderMonk',title:'BlenderMonk',description:'store and social links',links:blendermonkLinks},
+};
 const icons={
  x:'<path d="M5 4h4l10 16h-4zM19 4L5 20"/>',
  globe:'<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/>',
+ facebook:'<path d="M14 21v-8h3l.5-4H14V7c0-1 .4-2 2-2h2V1.5A24 24 0 0 0 15 1c-3 0-5 2-5 5v3H7v4h3v8"/>',
+ hive:'<path d="m12 2 8.7 5v10L12 22l-8.7-5V7zM12 7l4.3 2.5v5L12 17l-4.3-2.5v-5zM12 2v5M20.7 7l-4.4 2.5M20.7 17l-4.4-2.5M12 22v-5M3.3 17l4.4-2.5M3.3 7l4.4 2.5"/>',
  video:'<rect x="3" y="5" width="18" height="14" rx="4"/><path d="m10 9 5 3-5 3z"/>',
 };
 export function iconMarkup(icon){return `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">${icons[icon]}</svg>`;}
-export function createProjectHub(el,onChoosing){
+export function createProjectHub(el,onChoosing,config=projectHubs['asimulation.io']){
+ const {id,name,title,description,links}=config;
  el.classList.add('project-hub');el.removeAttribute('aria-hidden');
  const trigger=document.createElement('button');trigger.type='button';trigger.className='project-hub-trigger';
- trigger.textContent='asimulation.io';trigger.setAttribute('aria-label','ASimulation — show website and social links');
- trigger.setAttribute('aria-expanded','false');trigger.setAttribute('aria-controls','asimulation-destinations');
+ trigger.textContent=title;trigger.setAttribute('aria-label',`${name} — show ${description}`);
+ trigger.setAttribute('aria-expanded','false');trigger.setAttribute('aria-controls',`${id}-destinations`);
  const satellites=document.createElement('span');satellites.className='project-satellites';satellites.setAttribute('aria-hidden','true');
- satellites.innerHTML=asimulationLinks.map(({icon})=>`<span class="project-satellite">${iconMarkup(icon)}</span>`).join('');
- const menu=document.createElement('nav');menu.id='asimulation-destinations';menu.className='project-destinations';menu.setAttribute('aria-label','ASimulation destinations');menu.hidden=true;
- menu.innerHTML=asimulationLinks.map(({label,url,icon})=>`<a href="${url}" target="_blank" rel="noopener noreferrer" aria-label="ASimulation ${label} (opens in a new tab)">${iconMarkup(icon)}<span>${label}</span></a>`).join('');
+ satellites.innerHTML=links.map(({icon})=>`<span class="project-satellite">${iconMarkup(icon)}</span>`).join('');
+ const menu=document.createElement('nav');menu.id=`${id}-destinations`;menu.className='project-destinations';menu.setAttribute('aria-label',`${name} destinations`);menu.hidden=true;
+ menu.innerHTML=links.map(({label,url,icon})=>`<a href="${url}" target="_blank" rel="noopener noreferrer" aria-label="${name} ${label} (opens in a new tab)">${iconMarkup(icon)}<span>${label}</span></a>`).join('');
  el.replaceChildren(trigger,satellites,menu);
  let open=false,pinned=false,over=false,closeTimer=0,ignoreFocus=false;
  function setOpen(value){clearTimeout(closeTimer);if(open===value)return;open=value;trigger.setAttribute('aria-expanded',String(open));menu.hidden=!open;el.classList.toggle('is-choosing',open);onChoosing(open);}

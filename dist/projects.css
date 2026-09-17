@@ -48,3 +48,12 @@
 /* Fixed labels follow solid moons; smaller type leaves room for twelve paths. */
 .orbit-name{font-size:clamp(12px,1.12vw,17px)}
 @media(max-width:600px){.orbit-name{font-size:11px}.project-hub-trigger{padding:6px 8px}}
+
+/* Atmospheric light remains inside the constellation, preserving the dark page. */
+.cloud-stage{background:radial-gradient(ellipse at 52% 52%,#12383c48 0,#36201018 28%,transparent 60%)}
+
+/* Immersive desktop crop: the scene can pass behind the heading and filters. */
+.cloud-stage{inset:0;z-index:0}
+.constellation-heading{z-index:2}
+.constellation-bottom{z-index:4}
+@media(max-width:600px){.cloud-stage{inset:155px 0 90px}}
