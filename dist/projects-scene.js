@@ -3,6 +3,7 @@ import {createPlanetVolume} from './planet-volume.js?v=atmosphere-20260917-1';
 import {createProjectHub,projectHubs} from './project-links.js?v=atmosphere-20260917-1';
 import {createProjectMoon,createOrbitParticles} from './project-moons.js?v=atmosphere-20260917-1';
 import {projectOrbit} from './project-orbits.js?v=atmosphere-20260917-1';
+import {createOrbitView,bindOrbitInput} from './project-view.js?v=orbit-view-20260917-1';
 
 const host=document.querySelector('#cloud-stage');
 const canvas=document.querySelector('#project-cloud');
@@ -13,8 +14,12 @@ const reduced=matchMedia('(prefers-reduced-motion: reduce)');
 const categories=document.querySelector('.orbit-categories');
 const categoryButtons=[...categories.querySelectorAll('button')];
 const connectors=document.querySelector('#orbit-connectors');
+const viewControls=document.querySelector('#orbit-view-controls');
+const zoomOut=document.querySelector('#orbit-zoom-out');
+const zoomIn=document.querySelector('#orbit-zoom-in');
+const zoomValue=document.querySelector('#orbit-zoom-value');
 let renderer, frame=0, lost=false;
-function fail(error){cancelAnimationFrame(frame);frame=0;lost=true;button.hidden=true;categories.hidden=true;labelsHost.hidden=true;connectors.style.display='none';fallback.hidden=false;console.warn('Project cloud unavailable.',error);}
+function fail(error){cancelAnimationFrame(frame);frame=0;lost=true;button.hidden=true;categories.hidden=true;viewControls.hidden=true;canvas.tabIndex=-1;labelsHost.hidden=true;connectors.style.display='none';fallback.hidden=false;console.warn('Project cloud unavailable.',error);}
 
 try {
  renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:'low-power'});
@@ -76,6 +81,19 @@ try {
   return {el,leader,dot,type,lane:lanes[index],phase:lanes[index].phase};
  });
  let paused=reduced.matches,visible=true,elapsed=0,last=0,w=1,h=1,selected=null,hovered=null;
+ const view=createOrbitView(camera,()=>{
+  const zoomText=`${Math.round(view.zoom*100)}%`;
+  if(zoomValue.textContent!==zoomText)zoomValue.textContent=zoomText;
+  zoomOut.disabled=view.zoom<=.5;zoomIn.disabled=view.zoom>=2;
+  if(!frame&&!lost)frame=requestAnimationFrame(()=>{frame=0;draw();start();});
+ });
+ const dismissHubs=()=>{for(const hub of hubs.values())hub.dismiss();};
+ const input=bindOrbitInput(canvas,view,{onInteraction:dismissHubs,onDragChange:dragging=>host.classList.toggle('is-dragging',dragging)});
+ zoomOut.addEventListener('click',()=>{dismissHubs();view.zoomBy(1/1.2);});
+ zoomIn.addEventListener('click',()=>{dismissHubs();view.zoomBy(1.2);});
+ document.querySelector('#orbit-view-reset').addEventListener('click',()=>{dismissHubs();view.reset();});
+ viewControls.hidden=false;canvas.tabIndex=0;
+ const cameraPoint=new THREE.Vector3();
  const ray=new THREE.Vector3();
  function transmission(worldPoint){
   ray.copy(worldPoint).sub(camera.position);const distance=ray.length();ray.divideScalar(distance);
@@ -85,6 +103,11 @@ try {
   return Math.exp(-path*24.);
  }
  function draw(){
+  camera.updateMatrixWorld();
+  volume.uniforms.eye.value.copy(camera.position);
+  for(const lane of lanes)for(const object of [lane.rocks,lane.moon,lane.dust,lane.comet]){
+   if(object)object.material.uniforms.eye.value.copy(camera.position);
+  }
   volume.uniforms.time.value=elapsed;
   const active=hovered??selected;
   lanes.forEach((lane,index)=>{
@@ -112,10 +135,11 @@ try {
   for(const label of labels){
    const {el,lane,phase,type}=label;
    orbitPoint(phase+elapsed*lane.speed,lane,point);
-   const depth=point.z,throughMist=transmission(point);point.project(camera);
+   cameraPoint.copy(point).applyMatrix4(camera.matrixWorldInverse);
+   const distance=camera.position.length(),depth=cameraPoint.z+distance,throughMist=transmission(point);point.project(camera);
    // Project the same coordinates as the paths; fit the camera on resize.
    const proximity=THREE.MathUtils.clamp((depth+lane.radius)/(2*lane.radius),0,1);
-   const scale=THREE.MathUtils.clamp(.95+(camera.position.z/(camera.position.z-depth)-1)*.32,.87,1.18);
+   const scale=THREE.MathUtils.clamp(.95+(distance/(-cameraPoint.z)-1)*.32,.87,1.18);
    const x=(point.x*.5+.5)*w;
    const y=(-point.y*.5+.5)*h+20;
    const isHub=el.classList.contains('project-hub');
@@ -158,17 +182,9 @@ try {
     point.z+(Math.abs(point.x)+.18)/(tangent*camera.aspect*usableX),
     point.z+(Math.abs(point.y)+.18)/(tangent*usableY));
   }
-  camera.position.z=cameraDistance;
   // Desktop is deliberately immersive: outer paths may pass beyond the frame.
   // Narrow screens ease toward the overview so the centre remains legible.
-  camera.zoom=THREE.MathUtils.lerp(1.15,1.8,THREE.MathUtils.clamp((w-380)/320,0,1));
-
-  camera.updateProjectionMatrix();volume.uniforms.eye.value.copy(camera.position);lanes.forEach(lane=>{
-   lane.rocks.material.uniforms.eye.value.copy(camera.position);
-   lane.moon.material.uniforms.eye.value.copy(camera.position);
-   lane.dust.material.uniforms.eye.value.copy(camera.position);
-   lane.comet?.material.uniforms.eye.value.copy(camera.position);
-  });draw();
+  view.setFraming(cameraDistance,THREE.MathUtils.lerp(1.15,1.8,THREE.MathUtils.clamp((w-380)/320,0,1)));draw();
  }
  function highlight(){
   const active=hovered??selected;
@@ -189,7 +205,7 @@ try {
  document.addEventListener('visibilitychange',()=>document.hidden?stop():start());
  new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;visible?start():stop();}).observe(host);
  new ResizeObserver(resize).observe(host);
- canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();fail('WebGL context lost');});
- canvas.addEventListener('webglcontextrestored',()=>{lost=false;labelsHost.hidden=false;connectors.style.display='';categories.hidden=false;fallback.hidden=true;button.hidden=false;resize();start();});
+ canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();input.cancel();fail('WebGL context lost');});
+ canvas.addEventListener('webglcontextrestored',()=>{lost=false;labelsHost.hidden=false;connectors.style.display='';categories.hidden=false;fallback.hidden=true;button.hidden=false;viewControls.hidden=false;canvas.tabIndex=0;resize();start();});
  resize();sync();start();
 } catch(error){fail(error);}

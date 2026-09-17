@@ -15,6 +15,7 @@ Run `node validate.mjs` to check page links, assets, JavaScript syntax and secur
 - `dist/scene.js`: original raymarched volume, curve geometry and motion.
 - `dist/planet-volume.js`: the Projects planet, atmosphere and twelve shallow ring volumes in one depth integration.
 - `dist/project-orbits.js`: twelve independent radii, inclinations and angular speeds.
+- `dist/project-view.js`: left-mouse camera orbit, keyboard equivalents, and bounded 50–200% view zoom. Rotation and zoom persist across responsive resizes; Reset view restores the original framing. The renderer uses camera-space label depth and updates all volume/particle eye uniforms when the camera moves.
 - `dist/project-moons.js`: solid procedurally textured moons, instanced debris and soft orbital dust/comet particles.
 - `dist/project-links.js`: ordered ASimulation and BlenderMonk destinations and hover/focus/tap disclosure.
 - `PLANET-RESEARCH.md`: source-linked research and artistic implementation choices.
@@ -42,6 +43,8 @@ The approved atmospheric revision uses a softer plum/copper planet with layered 
 ZXY rotation order gives the twelve paths genuinely distinct world-space planes. Nonlinear radial spacing separates close, middle and distant paths; outer moons move more slowly and perspective changes their apparent size as they approach. Outer ring density and dust become gradually more transparent, with subtle hue and opacity variation. Names follow their textured moons with fixed offsets and depth ordering, without collision avoidance or screen-edge clamping. Desktop presentation magnifies the full scene 1.8x, allowing outer rings to cross behind the heading and beyond the scene edges; narrow screens ease toward the overview. Category highlighting, pause, reduced motion, tab visibility, offscreen suspension and the static accessible directory remain supported. Run `node --test test-project-orbits.mjs test-project-links.mjs` for orbit geometry and menu checks.
 
 The user approved this atmospheric revision for publication after reviewing the Codex preview on 17 September 2026.
+
+The user approved the camera interaction update for publication on 18 September 2026: left drag rotates, wheel or +/− controls zoom from 50% to 200%, and Reset view restores the initial angle and zoom. Touch keeps native vertical page scrolling. Arrow keys, +/− and R work when the canvas is focused. `node --test test-project-view.mjs test-project-orbits.mjs test-project-links.mjs` covers camera depth, zoom bounds, resizing, pointer cancellation and existing menus. Browser checks on 17 September verified mouse drag while paused, wheel zoom, both zoom limits, reset, BlenderMonk destinations, twelve labels, and a 390px layout without overflow or shader errors.
 
 1. Verify domain ownership in the GitHub account's Pages settings using GitHub's unique TXT record. Keep this verification record.
 2. Set the custom domain in the repository's Pages settings before pointing public DNS at it.

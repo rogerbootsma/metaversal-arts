@@ -57,3 +57,21 @@
 .constellation-heading{z-index:2}
 .constellation-bottom{z-index:4}
 @media(max-width:600px){.cloud-stage{inset:155px 0 90px}}
+
+/* Camera interaction leaves the destination menus and page scrolling native. */
+#project-cloud{cursor:grab;touch-action:pan-y;user-select:none}
+.is-dragging #project-cloud{cursor:grabbing}
+.is-dragging .project-hub{pointer-events:none}
+#project-cloud:focus-visible{outline:1px solid #c9a372;outline-offset:-4px}
+.orbit-view-controls{position:absolute;right:5%;bottom:88px;z-index:4;display:flex;align-items:center;gap:18px;color:#b9ad9b;font-size:11px}
+.orbit-view-controls[hidden]{display:none}
+.orbit-view-buttons{display:flex;align-items:center;border:1px solid #8b704950;background:#0b0e0dd9;border-radius:24px;padding:2px;box-shadow:0 4px 18px #0003}
+.orbit-view-buttons button{border:0;background:transparent;color:#e9cba0;font:inherit;cursor:pointer;min-width:40px;min-height:40px;border-radius:22px}
+.orbit-view-buttons button:hover{background:#c8a06820;color:#fff4df}
+.orbit-view-buttons button:focus-visible{outline:2px solid #eac48b;outline-offset:1px}
+.orbit-view-buttons button:disabled{opacity:.3;cursor:default}
+#orbit-zoom-value{min-width:40px;text-align:center;font-variant-numeric:tabular-nums}
+#orbit-view-reset{padding:0 14px;border-left:1px solid #8b704950;border-radius:0 22px 22px 0}
+@media(max-width:900px){.orbit-view-controls{bottom:106px}}
+@media(max-width:600px){.orbit-view-controls{bottom:114px;left:6%;right:6%;justify-content:flex-end}#orbit-view-hint{display:none}.orbit-view-buttons button{min-height:44px;min-width:44px}}
+@media(pointer:coarse){#orbit-view-hint{display:none}}
