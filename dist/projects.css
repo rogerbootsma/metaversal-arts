@@ -22,3 +22,25 @@
 @media(max-width:1100px){.orbit-categories{top:137px;left:5%;right:auto;max-width:90%;justify-content:flex-start}.cloud-stage{inset:185px 0 90px}.constellation{min-height:710px}}
 @media(max-width:600px){.constellation{min-height:650px;height:auto}.constellation-heading{top:29px}.constellation h1{font-size:48px}.orbit-categories{top:126px;left:6%;right:6%;max-width:none;gap:6px}.orbit-categories button{font-size:12px;padding:9px 10px}.orbit-categories button span{display:none}.cloud-stage{inset:172px 0 110px}.constellation-bottom{bottom:22px;gap:14px}.constellation-bottom>.eyebrow{font-size:10px}.orbit-name{font-size:14px}.constellation-bottom .text-link{padding-top:0}.constellation-bottom .motion{font-size:11px}}
 @media(prefers-reduced-motion:reduce){.orbit-categories button,.project-directory li{transition:none}}
+/* ASimulation: a quiet satellite signal, then a stationary destination chooser. */
+.project-hub{pointer-events:auto}
+.project-hub-trigger{font:inherit;letter-spacing:inherit;color:inherit;text-shadow:inherit;cursor:pointer;display:block;background:transparent;border:1px solid transparent;border-radius:22px;padding:8px 10px;min-height:44px;position:relative;z-index:2}
+.project-hub-trigger:hover,.project-hub-trigger[aria-expanded=true]{color:#fff0d7;background:#15140fed;border-color:#806640}
+.project-hub-trigger:focus-visible{outline:2px solid #eac48b;outline-offset:3px;background:#17160f}
+.project-satellites{position:absolute;inset:-9px -16px;pointer-events:none;border:1px solid #c79e5b26;border-radius:50%;transform:rotate(-12deg)}
+.project-satellite{position:absolute;left:0;top:0;offset-path:ellipse(50% 50% at 50% 50%);offset-rotate:0deg;animation:satellite-travel 15s linear infinite;display:grid;place-items:center;width:18px;height:18px;background:#10120fe8;border:1px solid #8d704d;border-radius:50%;color:#e9c18a}
+.project-satellite:nth-child(2){animation-delay:-5s}.project-satellite:nth-child(3){animation-delay:-10s}
+.project-hub svg{display:block;width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.project-satellite svg{width:11px;height:11px}
+@keyframes satellite-travel{to{offset-distance:100%}}
+.is-choosing .project-satellite,.motion-paused .project-satellite{animation-play-state:paused}
+.project-hub.is-choosing .project-satellites{opacity:.5}
+.project-destinations{position:absolute;top:100%;left:50%;transform:translateX(calc(-50% + var(--menu-shift,0px)));width:284px;display:grid;grid-template-columns:1fr 1.1fr 1fr;gap:5px;padding:12px 8px 8px;background:#10120ffa;border:1px solid #85673f;border-radius:13px;box-shadow:0 12px 32px #0009;z-index:3}
+.project-destinations[hidden]{display:none}.menu-above .project-destinations{top:auto;bottom:100%;padding:8px 8px 12px}
+.project-destinations a{display:flex;min-height:66px;align-items:center;justify-content:center;flex-direction:column;gap:8px;padding:8px 4px;border:1px solid #c79e5b30;border-radius:8px;font-size:13px;line-height:1.1;color:#e6d7bc;background:#191b14;text-shadow:none}
+.project-destinations a:nth-child(2){background:#30281a;color:#ffe0ac;border-color:#80633d}
+.project-destinations a:hover,.project-destinations a:focus-visible{color:#fff6e8;border-color:#e6bc80;background:#3a2e1e;outline-offset:2px}
+.directory-destinations{display:flex;gap:16px;flex-wrap:wrap;margin-top:5px}.directory-destinations a{font-size:13px;min-height:44px;display:inline-flex;align-items:center;color:#e8c48f;text-decoration:underline;text-underline-offset:4px}
+@media(prefers-reduced-motion:reduce){.project-satellite{animation:none}.project-satellite:nth-child(2){offset-distance:33.333%}.project-satellite:nth-child(3){offset-distance:66.667%}}
+.constellation{min-height:780px;max-height:1080px}
+@media(max-width:600px){.constellation{min-height:710px}.cloud-stage{inset:172px 0 106px}}

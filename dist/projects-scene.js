@@ -1,4 +1,6 @@
 import * as THREE from './vendor/three.module.min.js';
+import {createPlanetVolume} from './planet-volume.js?v=planet-1';
+import {createProjectHub} from './project-links.js?v=asimulation-1';
 
 const host=document.querySelector('#cloud-stage');
 const canvas=document.querySelector('#project-cloud');
@@ -18,49 +20,8 @@ try {
  const scene=new THREE.Scene();
  const camera=new THREE.PerspectiveCamera(39,1,.1,50);
  camera.position.z=9;
- const volume=new THREE.ShaderMaterial({transparent:true,depthWrite:false,
-  uniforms:{time:{value:0},eye:{value:camera.position.clone()}},
-  vertexShader:`varying vec3 localPosition;void main(){localPosition=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
-  fragmentShader:`precision highp float;
-   varying vec3 localPosition;uniform vec3 eye;uniform float time;
-   float hash4(vec4 p){p=fract(p*vec4(.1031,.1030,.0973,.1099));p+=dot(p,p.wzxy+33.33);return fract((p.x+p.y)*(p.z+p.w));}
-   float slice4(vec4 i,vec3 f){
-    return mix(mix(mix(hash4(i),hash4(i+vec4(1,0,0,0)),f.x),mix(hash4(i+vec4(0,1,0,0)),hash4(i+vec4(1,1,0,0)),f.x),f.y),
-     mix(mix(hash4(i+vec4(0,0,1,0)),hash4(i+vec4(1,0,1,0)),f.x),mix(hash4(i+vec4(0,1,1,0)),hash4(i+vec4(1,1,1,0)),f.x),f.y),f.z);
-   }
-   // Interpolate 16 independent lattice corners in x, y, z and time.
-   // Quintic interpolation keeps motion smooth across temporal cell boundaries.
-   float noise4(vec4 p){vec4 i=floor(p),f=fract(p);f=f*f*f*(f*(f*6.-15.)+10.);return mix(slice4(i,f.xyz),slice4(i+vec4(0,0,0,1),f.xyz),f.w);}
-   float mist(vec4 q){return noise4(q)*.57+noise4(q*2.03)*.28+noise4(q*4.07)*.15;}
-   void main(){vec3 ray=normalize(localPosition-eye);float b=dot(eye,ray),h=b*b-dot(eye,eye)+4.;if(h<0.)discard;
-    float root=sqrt(h),start=-b-root,stepSize=root*2./48.;float alpha=0.;vec3 light=vec3(0.);
-    // A ten-second breath with gentle, continuous acceleration at each turn.
-    float breath=sin(time*.62831853);
-    float expansion=1.+breath*.065;
-    for(int i=0;i<48;i++){
-     vec3 p=(eye+ray*(start+(float(i)+.5)*stepSize))/expansion;
-     float angle=p.y*.8+time*.065;float c=cos(angle),s=sin(angle);
-     vec3 q=vec3(c*p.x-s*p.z,p.y,s*p.x+c*p.z)*2.5;
-     vec3 sway=vec3(sin(time*.18),cos(time*.15),sin(time*.12))*.12;
-     float evolution=time*.075;
-     float warp=noise4(vec4(q*.7+sway,evolution*.7));
-     float n=mist(vec4(q+vec3(warp)*.9+sway,evolution));
-     float radius=length(p*vec3(1.,1.05,1.));
-     float envelope=1.-smoothstep(.95,1.87,radius);
-     float density=smoothstep(.32,.68,n)*envelope*(1.+breath*.07);
-     float a=1.-exp(-density*stepSize*1.8);
-     float core=exp(-radius*radius*1.1);
-     float filament=smoothstep(.46,.66,n);
-     float illumination=clamp(.4+p.y*.2+p.z*.17+filament*.6,0.,1.);
-     vec3 color=mix(vec3(.13,.09,.045),vec3(1.,.89,.71),illumination);
-     color+=vec3(1.,.92,.78)*core*(.5+filament*.8);
-     light+=(1.-alpha)*a*color;alpha+=(1.-alpha)*a;
-    }
-    vec3 radiance=light/max(alpha,.001);
-    gl_FragColor=vec4(vec3(1.)-exp(-radiance*1.35),alpha*.94);
-   }`
- });
- scene.add(new THREE.Mesh(new THREE.SphereGeometry(2,48,32),volume));
+ const volume=createPlanetVolume(camera);
+ scene.add(new THREE.Mesh(new THREE.SphereGeometry(2.1,64,48),volume));
  // Each circular orbit has its own plane through the centre of the cloud.
  // The paths and labels use exactly the same transformed world coordinates.
  const lanes=[
@@ -83,9 +44,11 @@ try {
  }
  const projects=[...document.querySelectorAll('[data-project-name]')].map(el=>({name:el.textContent,type:Number(el.dataset.projectType)}));
  const assigned=[0,0,0];
+ let choosing=false,hub=null;
  const labels=projects.map(({name,type})=>{
   const count=projects.filter(project=>project.type===type).length;
-  const el=document.createElement('span');el.className='orbit-name';el.dataset.type=type;el.textContent=name;labelsHost.append(el);
+  const el=document.createElement('span');el.className='orbit-name';el.dataset.type=type;el.textContent=name;el.setAttribute('aria-hidden','true');labelsHost.append(el);
+  if(name==='asimulation.io')hub=createProjectHub(el,open=>{choosing=open;host.classList.toggle('is-choosing',open);if(open){stop();el.style.opacity='1';el.style.zIndex='200';}else{draw();start();}});
   const leader=document.createElementNS('http://www.w3.org/2000/svg','line');
   const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');dot.setAttribute('r','1.7');connectors.append(leader,dot);
   return {el,leader,dot,type,lane:lanes[type],phase:assigned[type]++/count*Math.PI*2+type*.6,displayY:null};
@@ -114,8 +77,12 @@ try {
    const scale=.94+proximity*.12;
    const x=(point.x*.5+.5)*w;
    const y=(-point.y*.5+.5)*h;
-   const opacity=(.76+proximity*.24)*throughMist*(active===null||active===type?1:.22);
-   positions.push({label,x,y,targetY:y,scale,opacity,proximity,width:el.offsetWidth*scale,height:el.offsetHeight*scale});
+   const isHub=el.classList.contains('project-hub');
+   const opacity=isHub&&choosing?1:(.76+proximity*.24)*(isHub?Math.max(.65,throughMist):throughMist)*(active===null||active===type?1:.22);
+   const labelWidth=el.offsetWidth*scale;
+   const margin=isHub?26:10;
+   const labelX=THREE.MathUtils.clamp(x,labelWidth/2+margin,w-labelWidth/2-margin);
+   positions.push({label,x:labelX,anchorX:x,y,targetY:y,scale,opacity,proximity,width:labelWidth,height:el.offsetHeight*scale});
   }
   // Keep the orbit anchor exact. Ease annotations apart with fine leader lines.
   const ordered=positions.filter(p=>p.opacity>.16).sort((a,b)=>a.y-b.y);
@@ -126,28 +93,34 @@ try {
     if(gap>0){a.targetY-=gap*.5;b.targetY+=gap*.5;}
    }
   }
-  for(const {label,x,y,targetY,scale,opacity,proximity,height} of positions){
+  for(const {label,x,anchorX,y,targetY,scale,opacity,proximity,height} of positions){
    const {el,leader,dot}=label;
    const destination=THREE.MathUtils.clamp(targetY,height/2+8,h-height/2-8);
    label.displayY=label.displayY===null||paused?destination:THREE.MathUtils.lerp(label.displayY,destination,.12);
    el.style.transform=`translate(${x}px,${label.displayY}px) translate(-50%,-50%) scale(${scale})`;
-   el.style.opacity=String(opacity);el.style.zIndex=String(Math.round(proximity*100));
-   leader.setAttribute('x1',x);leader.setAttribute('y1',y);leader.setAttribute('x2',x);leader.setAttribute('y2',label.displayY);
-   leader.style.opacity=String(Math.abs(label.displayY-y)>5?opacity*.45:0);
-   dot.setAttribute('cx',x);dot.setAttribute('cy',y);dot.style.opacity=String(opacity*.8);
+   el.style.opacity=String(opacity);el.style.zIndex=String(el.classList.contains('project-hub')&&choosing?200:Math.round(proximity*100));
+   if(el.classList.contains('project-hub')){
+    const halfMenu=142*scale;
+    const shift=THREE.MathUtils.clamp(x,halfMenu+10,w-halfMenu-10)-x;
+    el.style.setProperty('--menu-shift',`${shift/scale}px`);
+    el.classList.toggle('menu-above',label.displayY+height/2+106*scale>h-8);
+   }
+   leader.setAttribute('x1',anchorX);leader.setAttribute('y1',y);leader.setAttribute('x2',x);leader.setAttribute('y2',label.displayY);
+   leader.style.opacity=String(Math.hypot(label.displayY-y,x-anchorX)>5?opacity*.45:0);
+   dot.setAttribute('cx',anchorX);dot.setAttribute('cy',y);dot.style.opacity=String(opacity*.8);
   }
  }
- function tick(now){frame=0;if(paused||!visible||document.hidden||lost)return;elapsed+=Math.min((now-last)/1000,.1);last=now;draw();frame=requestAnimationFrame(tick);}
- function start(){if(!frame&&!paused&&visible&&!document.hidden&&!lost){last=performance.now();frame=requestAnimationFrame(tick);}}
+ function tick(now){frame=0;if(paused||choosing||!visible||document.hidden||lost)return;elapsed+=Math.min((now-last)/1000,.1);last=now;draw();frame=requestAnimationFrame(tick);}
+ function start(){if(!frame&&!paused&&!choosing&&visible&&!document.hidden&&!lost){last=performance.now();frame=requestAnimationFrame(tick);}}
  function stop(){cancelAnimationFrame(frame);frame=0;}
- function sync(){button.textContent=paused?'Resume motion':'Pause motion';button.setAttribute('aria-pressed',String(paused));}
+ function sync(){button.textContent=paused?'Resume motion':'Pause motion';button.setAttribute('aria-pressed',String(paused));host.classList.toggle('motion-paused',paused);}
  function resize(){
   w=host.clientWidth;h=host.clientHeight;if(!w||!h||lost)return;
   renderer.setSize(w,h,false);camera.aspect=w/h;
-  const widest=Math.max(...labels.map(({el})=>el.offsetWidth))*1.06;
-  const usable=Math.max(.25,(w-widest-24)/w);
+  // Frame the orbital geometry generously; edge annotations use leader lines.
+  const usable=Math.max(.25,(w-64)/w);
   const fit=2.9/(Math.tan(THREE.MathUtils.degToRad(camera.fov/2))*camera.aspect*usable);
-  camera.position.z=Math.max(9,Math.sqrt(2.9*2.9+fit*fit));
+  camera.position.z=Math.max(7.8,Math.sqrt(2.9*2.9+fit*fit));
   camera.updateProjectionMatrix();volume.uniforms.eye.value.copy(camera.position);lanes.forEach(lane=>lane.material.uniforms.eye.value.copy(camera.position));labels.forEach(label=>label.displayY=null);draw();
  }
  function highlight(){

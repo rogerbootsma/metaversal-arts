@@ -6,13 +6,16 @@ Static landing page for GitHub Pages. Original Three.js volumetric sculpture, re
 
 Run `node preview.mjs` and visit `http://127.0.0.1:4173`.
 
-Run `node validate.mjs` to check page links, assets, JavaScript syntax and security-policy presence. Browser rendering and GPU shader compilation have not yet been tested.
+Run `node validate.mjs` to check page links, assets, JavaScript syntax and security-policy presence. Run `node --test test-project-links.mjs` for the ASimulation disclosure regression checks. The Projects scene has also been inspected in the browser at desktop and narrow widths, including shader compilation, console errors, keyboard order, pause and menu bounds.
 
 ## Editing
 
 - `dist/index.html`: landing-page copy and structure.
 - `dist/style.css`: page appearance and responsive rules.
 - `dist/scene.js`: original raymarched volume, curve geometry and motion.
+- `dist/planet-volume.js`: the Projects planet's dense body, mineral formations, ribbons and 4D cloud shell.
+- `dist/project-links.js`: ordered ASimulation destinations and hover/focus/tap disclosure.
+- `PLANET-RESEARCH.md`: source-linked research and artistic implementation choices.
 - `make-pages.mjs`: legal/privacy/credits copy; run it to regenerate these pages after editing.
 - `dist/vendor/`: locally served Three.js 0.180.0 and MIT licence.
 
