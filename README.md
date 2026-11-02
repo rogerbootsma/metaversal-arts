@@ -13,8 +13,8 @@ Run `node validate.mjs` to check page links, assets, JavaScript syntax and secur
 - `dist/index.html`: landing-page copy and structure.
 - `dist/style.css`: page appearance and responsive rules.
 - `dist/scene.js`: original raymarched volume, curve geometry and motion.
-- `dist/planet-volume.js`: the Projects planet, atmosphere and twelve shallow ring volumes in one depth integration.
-- `dist/project-orbits.js`: twelve independent radii, inclinations and angular speeds.
+- `dist/planet-volume.js`: the Projects planet, atmosphere and fourteen shallow ring volumes in one depth integration.
+- `dist/project-orbits.js`: fourteen independent radii, inclinations and angular speeds.
 - `dist/project-view.js`: left-mouse camera orbit, keyboard equivalents, and bounded 50–200% view zoom. Rotation and zoom persist across responsive resizes; Reset view restores the original framing. The renderer uses camera-space label depth and updates all volume/particle eye uniforms when the camera moves.
 - `dist/project-moons.js`: solid procedurally textured moons, instanced debris and soft orbital dust/comet particles.
 - `dist/project-links.js`: ordered ASimulation and BlenderMonk destinations and hover/focus/tap disclosure.
@@ -40,7 +40,7 @@ The Projects navigation opens `dist/projects.html`. Edit the names and provision
 
 The approved atmospheric revision uses a softer plum/copper planet with layered weather, slow white cloud ribbons and a soft blue atmospheric limb. Its four-dimensional noise evolves with a gentle ten-second modulation. Twelve structured, shallow volumetric rings and the planet share a front-to-back raymarch for correct ring/planet crossings. Dust, small instanced rock debris and comet particles rotate on fixed planes. These are artistic volume fields rather than a physical scattering solver.
 
-ZXY rotation order gives the twelve paths genuinely distinct world-space planes. Nonlinear radial spacing separates close, middle and distant paths; outer moons move more slowly and perspective changes their apparent size as they approach. Outer ring density and dust become gradually more transparent, with subtle hue and opacity variation. Names follow their textured moons with fixed offsets and depth ordering, without collision avoidance or screen-edge clamping. Desktop presentation magnifies the full scene 1.8x, allowing outer rings to cross behind the heading and beyond the scene edges; narrow screens ease toward the overview. Category highlighting, pause, reduced motion, tab visibility, offscreen suspension and the static accessible directory remain supported. Run `node --test test-project-orbits.mjs test-project-links.mjs` for orbit geometry and menu checks.
+ZXY rotation order gives the fourteen paths genuinely distinct world-space planes. Nonlinear radial spacing separates close, middle and distant paths; outer moons move more slowly and perspective changes their apparent size as they approach. Outer ring density and dust become gradually more transparent, with subtle hue and opacity variation. Names follow their textured moons with fixed offsets and depth ordering, without collision avoidance or screen-edge clamping. Desktop presentation magnifies the full scene 1.8x, allowing outer rings to cross behind the heading and beyond the scene edges; narrow screens ease toward the overview. Category highlighting, pause, reduced motion, tab visibility, offscreen suspension and the static accessible directory remain supported. Run `node --test test-project-orbits.mjs test-project-links.mjs` for orbit geometry and menu checks.
 
 The user approved this atmospheric revision for publication after reviewing the Codex preview on 17 September 2026.
 
