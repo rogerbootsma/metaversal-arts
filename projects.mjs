@@ -8,4 +8,5 @@ export const projects = [
   {name:'Printaverses.com',type:0}, {name:'Planimorph.com',type:0},
   {name:'Metamultiverse.io',type:1}, {name:'BlenderMonk',type:0},
   {name:'spaceXvision',type:1}, {name:'tektitetemple.com',type:2},
+  {name:'ultrasi.io',type:1}, {name:'ultrasim.io',type:1},
 ];

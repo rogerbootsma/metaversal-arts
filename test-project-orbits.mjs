@@ -2,8 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from './dist/vendor/three.module.min.js';
 import {projectOrbit} from './dist/project-orbits.js';
+import {projects} from './projects.mjs';
 
-const lanes=Array.from({length:12},(_,i)=>{
+const lanes=Array.from({length:projects.length},(_,i)=>{
  const orbit=projectOrbit(i);
  const matrix=new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(orbit.tilt,0,orbit.turn,orbit.rotationOrder));
  return {...orbit,matrix,normal:new THREE.Vector3(0,0,1).transformDirection(matrix)};

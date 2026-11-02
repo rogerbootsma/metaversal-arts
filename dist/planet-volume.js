@@ -10,7 +10,7 @@ export function createPlanetVolume(camera,lanes){
   vertexShader:`varying vec3 localPosition;void main(){localPosition=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
   fragmentShader:`precision highp float;
    varying vec3 localPosition;uniform vec3 eye;uniform float time;uniform float bound;
-   uniform mat3 ringInverse[12];uniform float ringRadius[12];uniform float ringWidth[12];uniform float ringStrength[12];uniform vec2 ringFeather[12];uniform vec2 ringCurve[12];
+   uniform mat3 ringInverse[${lanes.length}];uniform float ringRadius[${lanes.length}];uniform float ringWidth[${lanes.length}];uniform float ringStrength[${lanes.length}];uniform vec2 ringFeather[${lanes.length}];uniform vec2 ringCurve[${lanes.length}];
    float hash4(vec4 p){p=fract(p*vec4(.1031,.1030,.0973,.1099));p+=dot(p,p.wzxy+33.33);return fract((p.x+p.y)*(p.z+p.w));}
    float slice4(vec4 i,vec3 f){
     return mix(mix(mix(hash4(i),hash4(i+vec4(1,0,0,0)),f.x),mix(hash4(i+vec4(0,1,0,0)),hash4(i+vec4(1,1,0,0)),f.x),f.y),
@@ -46,7 +46,7 @@ export function createPlanetVolume(camera,lanes){
      if(nearRadius>1.78&&nearRadius<2.25)stepSize=min(stepSize,${innerWidth<700?'.038':'.024'});
      // Resolve shallow bands before sampling them; large empty-space steps
      // would otherwise turn tilted rings into visible diagonal striping.
-     for(int k=0;k<12;k++){
+     for(int k=0;k<${lanes.length};k++){
       vec3 nearRing=ringInverse[k]*probe;
       if(abs(nearRing.z)<.18&&abs(length(nearRing.xy)-ringRadius[k])<ringWidth[k]*.65+.08)stepSize=min(stepSize,${innerWidth<700?'.028':'.018'});
      }
@@ -109,9 +109,9 @@ export function createPlanetVolume(camera,lanes){
       density=body+clouds+hanging+atmosphere+corona+cirrus;
       source=base*shade*body+cloudColor*(clouds+hanging)+cirrusColor*cirrus+air*atmosphere+vec3(.32,.57,1.)*corona*(.08+rim*6.)*(.5+day);
      }
-     // All twelve annular slabs participate in the same ray integration.
+     // All project annular slabs participate in the same ray integration.
      // Front arcs cover the planet; back arcs are absorbed by its dense core.
-     for(int j=0;j<12;j++){
+     for(int j=0;j<${lanes.length};j++){
       vec3 q=ringInverse[j]*p;float z=abs(q.z);
       if(z>.095)continue;
       float radial=length(q.xy),offset=(radial-ringRadius[j])/ringWidth[j];

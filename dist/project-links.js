@@ -10,6 +10,8 @@ export const blendermonkLinks = [
  {label:'YouTube',url:'https://www.youtube.com/@Blendermonk',icon:'video'},
 ];
 export const projectHubs = {
+ 'ultrasi.io':{id:'ultrasi',name:'Ultrasi',title:'ultrasi.io',description:'website link',links:[{label:'Website',url:'https://ultrasi.io/',icon:'globe'}]},
+ 'ultrasim.io':{id:'ultrasim',name:'UltraSim',title:'ultrasim.io',description:'website link',links:[{label:'Website',url:'https://ultrasim.io/',icon:'globe'}]},
  'asimulation.io':{id:'asimulation',name:'ASimulation',title:'asimulation.io',description:'website and social links',links:asimulationLinks},
  'BlenderMonk':{id:'blendermonk',name:'BlenderMonk',title:'BlenderMonk',description:'store and social links',links:blendermonkLinks},
 };
@@ -24,6 +26,7 @@ export function iconMarkup(icon){return `<svg viewBox="0 0 24 24" aria-hidden="t
 export function createProjectHub(el,onChoosing,config=projectHubs['asimulation.io']){
  const {id,name,title,description,links}=config;
  el.classList.add('project-hub');el.removeAttribute('aria-hidden');
+ el.classList.toggle('single-destination',links.length===1);
  const trigger=document.createElement('button');trigger.type='button';trigger.className='project-hub-trigger';
  trigger.textContent=title;trigger.setAttribute('aria-label',`${name} — show ${description}`);
  trigger.setAttribute('aria-expanded','false');trigger.setAttribute('aria-controls',`${id}-destinations`);

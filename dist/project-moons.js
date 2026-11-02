@@ -8,8 +8,9 @@ const occultation=`
 `;
 export function createProjectMoon(index,camera){
  const palette=[0xd9bc88,0x7fc0c1,0xb88a71,0xa3aabc,0xd2b59a,0xbbaa86];
+ const tint=index===12?0xb99bdc:index===13?0x91c5b6:palette[index%palette.length];
  const material=new THREE.ShaderMaterial({transparent:true,depthWrite:true,
-  uniforms:{eye:{value:camera.position.clone()},tint:{value:new THREE.Color(palette[index%palette.length])},seed:{value:index*13.71},strength:{value:1}},
+  uniforms:{eye:{value:camera.position.clone()},tint:{value:new THREE.Color(tint)},seed:{value:index*13.71},strength:{value:1}},
   vertexShader:`varying vec3 worldPoint;varying vec3 localPoint;varying vec3 worldNormal;
    void main(){localPoint=position;vec4 p=vec4(position,1.);vec3 n=normal;
    #ifdef USE_INSTANCING

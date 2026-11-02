@@ -37,6 +37,7 @@
 .project-hub.is-choosing .project-satellites{opacity:.5}
 .project-destinations{position:absolute;top:100%;left:50%;transform:translateX(calc(-50% + var(--menu-shift,0px)));width:284px;display:grid;grid-template-columns:1fr 1.1fr 1fr;gap:5px;padding:12px 8px 8px;background:#10120ffa;border:1px solid #85673f;border-radius:13px;box-shadow:0 12px 32px #0009;z-index:3}
 .project-destinations[hidden]{display:none}.menu-above .project-destinations{top:auto;bottom:100%;padding:8px 8px 12px}
+.single-destination .project-destinations{width:160px;grid-template-columns:1fr}
 .project-destinations a{display:flex;min-height:66px;align-items:center;justify-content:center;flex-direction:column;gap:8px;padding:8px 4px;border:1px solid #c79e5b30;border-radius:8px;font-size:13px;line-height:1.1;color:#e6d7bc;background:#191b14;text-shadow:none}
 .project-destinations a:nth-child(2){background:#30281a;color:#ffe0ac;border-color:#80633d}
 .project-destinations a:hover,.project-destinations a:focus-visible{color:#fff6e8;border-color:#e6bc80;background:#3a2e1e;outline-offset:2px}
