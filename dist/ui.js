@@ -25,14 +25,14 @@ if (enquiryForm) {
     }
     const subject = 'Metaversal Arts enquiry: ' + interest;
     const body = 'Hello Metaversal Arts,\n\n' + message + '\n\nArea of interest: ' + interest + '\n\nFrom: ' + name + '\nEmail: ' + email;
-    return {subject, body, text: 'To: contact@metaversalarts.io\nSubject: ' + subject + '\n\n' + body};
+    return {subject, body, text: 'To: rogerbootsma@gmail.com\nSubject: ' + subject + '\n\n' + body};
   };
   const prepare = () => {
     const enquiry = collect();
     if (!enquiry) return null;
     draftText.value = enquiry.text;
-    gmail.href = 'https://mail.google.com/mail/?' + new URLSearchParams({view:'cm',fs:'1',to:'contact@metaversalarts.io',su:enquiry.subject,body:enquiry.body});
-    app.href = 'mailto:contact@metaversalarts.io?subject=' + encodeURIComponent(enquiry.subject) + '&body=' + encodeURIComponent(enquiry.body);
+    gmail.href = 'https://mail.google.com/mail/?' + new URLSearchParams({view:'cm',fs:'1',to:'rogerbootsma@gmail.com',su:enquiry.subject,body:enquiry.body});
+    app.href = 'mailto:rogerbootsma@gmail.com?subject=' + encodeURIComponent(enquiry.subject) + '&body=' + encodeURIComponent(enquiry.body);
     draft.hidden = false;
     status.textContent = '';
     return enquiry;
@@ -63,7 +63,7 @@ if (enquiryForm) {
     if (!draft.hidden) {
       draft.hidden = true;
       gmail.href = 'https://mail.google.com/mail/';
-      app.href = 'mailto:contact@metaversalarts.io';
+      app.href = 'mailto:rogerbootsma@gmail.com';
       draftText.value = '';
       status.textContent = 'Your details changed. Prepare the email again to update the draft.';
     }

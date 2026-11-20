@@ -1,6 +1,6 @@
 # Metaversal Arts
 
-Static landing page for GitHub Pages. Original Three.js volumetric sculpture, responsive layout, reduced-motion support, and legal/privacy/credits pages. No analytics, cookies, remote fonts, remote scripts, or backend. The contact panel prepares an email locally for contact@metaversalarts.io; visitors review the on-page draft, then choose Gmail, an email app, or copy it into their preferred service. Nothing is sent automatically. It also offers an explicit copy-to-clipboard fallback.
+Static landing page for GitHub Pages. Original Three.js volumetric sculpture, responsive layout, reduced-motion support, and legal/privacy/credits pages. No analytics, cookies, remote fonts, remote scripts, or backend. The contact panel prepares an email locally for rogerbootsma@gmail.com; visitors review the on-page draft, then choose Gmail, an email app, or copy it into their preferred service. Nothing is sent automatically. It also offers an explicit copy-to-clipboard fallback.
 
 ## Local preview
 
